@@ -74,12 +74,12 @@ export default function FlightSearch() {
 
   function handleSubmit() {
     if (isStageOneCompleted) {
-      router.push("/denkatakka");
+      router.push("/testpage");
     } else {
       setButtonWarning(true);
       setTimeout(() => {
         setButtonWarning(false);
-      }, 1500);
+      }, 2000);
     }
   }
 
@@ -203,7 +203,11 @@ export default function FlightSearch() {
               color={buttonWarning ? "warning" : "primary"}
               onClick={handleSubmit}
             >
-              <p className="🛫 font-bold text-lg">Search Flights</p>
+              <p className="🛫 font-bold text-lg">
+                {buttonWarning
+                  ? "Please fill all the fields"
+                  : "Search Flights"}
+              </p>
             </Button>
           </div>
         </>
