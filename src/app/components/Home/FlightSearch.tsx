@@ -5,6 +5,18 @@ import { DatePicker } from "@nextui-org/date-picker";
 import { Select, SelectItem } from "@nextui-org/react";
 import { Button } from "@nextui-org/react";
 import { IoMdSwap } from "react-icons/io";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setArrivalAirport,
+  setDepartureAirport,
+  setArrivalDate,
+  setDepartureDate,
+  setPassengerClass,
+  setPassengerCount,
+  checkFirstStage,
+} from "@/app/GlobalRedux/Slices/FlightDetails/flight";
+import { RootState } from "@/app/GlobalRedux/store";
+import { useRouter } from "next/navigation";
 
 const passengerCountsList = [
   { key: 1, label: "1" },
@@ -14,28 +26,27 @@ const passengerCountsList = [
   { key: 5, label: "5" },
 ];
 
-export default function FlightSearch() {
-  const [loading, setLoading] = useState(false);
-  interface Country {
-    key: string;
-    label: string;
-  }
+interface Country {
+  key: string;
+  label: string;
+}
 
-  interface Class {
-    key: string;
-    label: string;
-  }
+interface Class {
+  key: string;
+  label: string;
+}
+
+export default function FlightSearch() {
+  const isStageOneCompleted = useSelector(
+    (state: RootState) => state.flight.isStageOneCompleted
+  );
+  const dispatch = useDispatch();
+
+  const [loading, setLoading] = useState(false);
 
   const [countries, setCountries] = useState<Country[]>([]);
   const [classes, setClasses] = useState<Class[]>([]);
-  const [departureAirport, setDepartureAirport] = useState<string>();
-  const [arrivalAirport, setArrivalAirport] = useState<string>();
-  const [arrivalDate, setArrivalDate] = useState<number>();
-  const [departureDate, setDepartureDate] = useState<number>();
-  const [passengerCount, setPassengerCount] = useState<string>();
-  const [passengerClass, setPassengerClass] = useState<string>();
-
-  const [buttonIsLoading, setButtonIsLoading] = useState<boolean>(false);
+  const [buttonWarning, setButtonWarning] = useState<boolean>(false);
 
   const fetchCountryNames = async () => {
     try {
@@ -59,28 +70,17 @@ export default function FlightSearch() {
     fetchCountryNames();
   }, []);
 
+  const router = useRouter();
+
   function handleSubmit() {
-    setButtonIsLoading(true);
-    if (
-      !departureAirport ||
-      !arrivalAirport ||
-      !departureDate ||
-      !arrivalDate ||
-      !passengerCount ||
-      !passengerClass
-    ) {
-      setButtonIsLoading(false);
-      return;
+    if (isStageOneCompleted) {
+      router.push("/denkatakka");
+    } else {
+      setButtonWarning(true);
+      setTimeout(() => {
+        setButtonWarning(false);
+      }, 1500);
     }
-    const flightDetails = {
-      departureAirport,
-      arrivalAirport,
-      departureDatet: departureDate,
-      arrivalDate,
-      passengerCount,
-      class: passengerClass,
-    };
-    console.log(flightDetails);
   }
 
   return (
@@ -100,7 +100,10 @@ export default function FlightSearch() {
                 size="lg"
                 variant="underlined"
                 className=" w-full h-full"
-                onChange={(e) => setDepartureAirport(e.target.value)}
+                onChange={(e) => {
+                  dispatch(setDepartureAirport(e.target.value));
+                  dispatch(checkFirstStage());
+                }}
               >
                 {countries.map((i) => (
                   <SelectItem key={i.key}>{i.label}</SelectItem>
@@ -118,7 +121,10 @@ export default function FlightSearch() {
                 size="lg"
                 variant="underlined"
                 className=" w-full h-full"
-                onChange={(e) => setArrivalAirport(e.target.value)}
+                onChange={(e) => {
+                  dispatch(setArrivalAirport(e.target.value));
+                  dispatch(checkFirstStage());
+                }}
               >
                 {countries.map((i) => (
                   <SelectItem key={i.key}>{i.label}</SelectItem>
@@ -132,9 +138,12 @@ export default function FlightSearch() {
               className="w-full"
               size="lg"
               variant="underlined"
-              onChange={(e) =>
-                setDepartureDate(10000 * e.year + 100 * e.month + e.day)
-              }
+              onChange={(e) => {
+                dispatch(
+                  setDepartureDate(10000 * e.year + 100 * e.month + e.day)
+                );
+                dispatch(checkFirstStage());
+              }}
             />
           </div>{" "}
           <div className=" w-full h-20">
@@ -143,9 +152,12 @@ export default function FlightSearch() {
               className="w-full"
               size="lg"
               variant="underlined"
-              onChange={(e) =>
-                setArrivalDate(10000 * e.year + 100 * e.month + e.day)
-              }
+              onChange={(e) => {
+                dispatch(
+                  setArrivalDate(10000 * e.year + 100 * e.month + e.day)
+                );
+                dispatch(checkFirstStage());
+              }}
             />
           </div>
           <div className=" w-full h-20 col-span-2">
@@ -156,7 +168,10 @@ export default function FlightSearch() {
               size="lg"
               variant="underlined"
               className=" w-full h-full"
-              onChange={(e) => setPassengerCount(e.target.value)}
+              onChange={(e) => {
+                dispatch(setPassengerCount(e.target.value));
+                dispatch(checkFirstStage());
+              }}
             >
               {passengerCountsList.map((num) => (
                 <SelectItem key={num.key}>{num.label}</SelectItem>
@@ -171,7 +186,10 @@ export default function FlightSearch() {
               size="lg"
               variant="underlined"
               className=" w-full h-full"
-              onChange={(e) => setPassengerClass(e.target.value)}
+              onChange={(e) => {
+                dispatch(setPassengerClass(e.target.value));
+                dispatch(checkFirstStage());
+              }}
             >
               {classes.map((i) => (
                 <SelectItem key={i.key}>{i.label}</SelectItem>
@@ -181,10 +199,9 @@ export default function FlightSearch() {
           <div className=" w-full h-20 col-span-2">
             <Button
               className=" w-full h-[calc(100%-1rem)]"
-              variant="flat"
-              color="primary"
+              variant="solid"
+              color={buttonWarning ? "warning" : "primary"}
               onClick={handleSubmit}
-              isLoading={buttonIsLoading}
             >
               <p className="🛫 font-bold text-lg">Search Flights</p>
             </Button>
