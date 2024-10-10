@@ -74,7 +74,7 @@ export default function FlightSearch() {
 
   function handleSubmit() {
     if (isStageOneCompleted) {
-      router.push("/testpage");
+      router.push("/findaflight");
     } else {
       setButtonWarning(true);
       setTimeout(() => {
