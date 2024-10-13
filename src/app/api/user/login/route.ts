@@ -14,7 +14,7 @@ export async function POST(request : Request) {
 
     const res = await executeQuery("SELECT registered_user.id, role.role, registered_user.password FROM `registered_user` INNER JOIN `role` ON role.id=registered_user.role_id WHERE `username`=?",[username])
     
-    if (res.length === 0) {
+    if (res.length !== 1) {
         return new Response('Invalid credentials', { status: 400 });
     }
     
