@@ -48,37 +48,7 @@ LIMIT 0, 1000
 
 -- Date: 2024-10-03 14:08
 */
-CREATE DEFINER=`root`@`localhost` FUNCTION `reservation_validateSeat`(seat_num VARCHAR(10), schdl_id INT, registered_usr_id INT) RETURNS int
-    READS SQL DATA
-BEGIN
-	DECLARE scount INT;
-    DECLARE sid INT;
-    DECLARE airplane_n VARCHAR(10);
-    DECLARE bcount INT;
-    DECLARE rbcount INT;
-    
-    SELECT `airplane_number` INTO airplane_n FROM `schedule` WHERE `id`=schdl_id;
-    
-    -- Check if valid airplane seat
-    SELECT id INTO sid FROM `seat` WHERE `seat_number`=seat_num AND `airplane_number`=airplane_n;
-    IF sid IS NULL THEN
-		RETURN -1;
-	END IF;
-    
-    -- If someone else has this as pending booking
-    SELECT COUNT(*) INTO rbcount FROM `pending_booking` WHERE `seat_id`=sid AND `schedule_id`=schdl_id AND (registered_usr_id IS NULL OR `registered_user_id` != registered_usr_id);
-    IF rbcount != 0 THEN
-		RETURN -2;
-	END IF;
-    
-    -- If the seat is confirmed in booking for that schedule
-    SELECT COUNT(*) INTO bcount FROM `booking` WHERE `seat_id`=sid AND `schedule_id`=schdl_id;
-    IF bcount != 0 THEN
-		RETURN -3;
-	END IF;
-    
-    RETURN sid;
-END
+
 
 INSERT INTO `airport` (`code`,`name`,`city_id`) VALUES ('BKK','Suvarnabhumi Airport',12);
 INSERT INTO `airport` (`code`,`name`,`city_id`) VALUES ('BOM','Chhatrapati Shivaji Maharaj International Airport',9);
@@ -90,6 +60,57 @@ INSERT INTO `airport` (`code`,`name`,`city_id`) VALUES ('DPS','Ngurah Rai Intern
 INSERT INTO `airport` (`code`,`name`,`city_id`) VALUES ('HIA','Mattala Rajapaksa International Airport',3);
 INSERT INTO `airport` (`code`,`name`,`city_id`) VALUES ('MAA','Chennai International Airport',10);
 INSERT INTO `airport` (`code`,`name`,`city_id`) VALUES ('SIN','Changi Airport',15);
+
+
+INSERT INTO `route` (flight_code, departure_time, duration, distance, departure, arrival) VALUES
+('VB3811', '08:00:00', '07:00:00', 4647, 'CGK', 'BOM'),
+('VB3812', '14:00:00', '08:00:00', 5574, 'BOM', 'DPS'),
+('VB3813', '19:00:00', '08:30:00', 5822, 'DPS', 'DEL');
+
+INSERT INTO `route` (flight_code, departure_time, duration, distance, departure, arrival) VALUES
+('VB7371', '08:00:00', '03:30:00', 2392, 'BKK', 'CMB'),
+('VB7372', '15:30:00', '02:00:00', 1526, 'CMB', 'BOM'),
+('VB7373', '19:00:00', '04:00:00', 3010, 'BOM', 'DMK'),
+
+('VB7374', '10:00:00', '01:00:00', 883, 'SIN', 'CGK'),
+('VB7375', '13:00:00', '02:40:00', 2298, 'CGK', 'BKK'),
+('VB7376', '18:00:00', '02:40:00', 2300, 'BKK', 'HRI'),
+
+('VB7377', '05:00:00', '01:20:00', 983, 'DPS', 'CGK'),
+('VB7378', '09:00:00', '02:40:00', 2326, 'CGK', 'DMK'),
+('VB7379', '15:30:00', '02:40:00', 2212, 'DMK', 'MAA');
+
+INSERT INTO `route` (flight_code, departure_time, duration, distance, departure, arrival) VALUES
+('VB7571', '07:00:00', '01:30:00', 1446, 'DMK', 'SIN'),
+('VB7572', '11:30:00', '03:00:00', 2926, 'SIN', 'MAA'),
+('VB7573', '17:00:00', '04:00:00', 3617, 'MAA', 'CGK'),
+
+('VB7574', '10:00:00', '02:00:00', 1761, 'MAA', 'DEL'),
+('VB7575', '14:00:00', '02:30:00', 2396, 'DEL', 'CMB'),
+('VB7576', '19:30:00', '04:30:00', 4293, 'CMB', 'DPS'),
+
+('VB7577', '09:00:00', '04:40:00', 4990, 'DEL', 'CGK'),
+('VB7578', '15:00:00', '03:40:00', 3617, 'CGK', 'MAA'),
+('VB7579', '21:00:00', '02:20:00', 1967, 'MAA', 'SIN'),
+
+('VB7580', '04:00:00', '02:30:00', 2396, 'CMB', 'DEL'),
+('VB7581', '10:00:00', '06:00:00', 5822, 'DEL', 'DPS'),
+('VB7582', '18:00:00', '03:30:00', 2953, 'DPS', 'BKK');
+
+INSERT INTO `schedule` (delay, date, airplane_number, flight_code) VALUES
+('00:00:00', '2024-10-15', 'PK-AAA', 'VB3811'),
+
+('02:00:00', '2024-10-15', 'PK-BAA', 'VB7371'),
+('00:00:00', '2024-10-15', 'PK-BAA', 'VB7372'),
+('01:00:00', '2024-10-15', 'PK-BAA', 'VB7373'),
+
+('00:45:00', '2024-10-15', 'PK-BBA', 'VB7571'),
+('00:00:00', '2024-10-15', 'PK-BBA', 'VB7572'),
+('01:30:00', '2024-10-15', 'PK-BBA', 'VB7573'),
+
+
+
+
 /*
 -- Query: SELECT * FROM mydb.country
 LIMIT 0, 1000
@@ -136,6 +157,22 @@ INSERT INTO `seat_class` (`id`,`name`,`price`,`model_id`) VALUES (8,'premium eco
 INSERT INTO `seat_class` (`id`,`name`,`price`,`model_id`) VALUES (9,'economy',18500000,2);
 INSERT INTO `seat_class` (`id`,`name`,`price`,`model_id`) VALUES (10,'business',45000000,2);
 INSERT INTO `seat_class` (`id`,`name`,`price`,`model_id`) VALUES (11,'first',90000000,2);
+
+
+INSERT INTO `passenger` (name, age, gender, passport_number, NIC, country_code) VALUES
+('John Doe', 30, 'male', '123456789', '200212345672', 'IDN'),
+('Jane Smith', 28, 'female', '987654321', '202276543212', 'IND'),
+('Ali Khan', 35, 'male', '123987654', '220298765455', 'IND'),
+('Maria Garcia', 26, 'female', '456123789', '199923456782', 'LKA'),
+('Chen Wei', 15, 'other', '321456987', NULL, 'SGP'),
+('Sara Johnson', 32, 'female', '654321987', '123454321672', 'THA'),
+('Raj Patel', 17, 'male', '789456123', NULL, 'IND'),
+('Fatima Al-Farsi', 25, 'female', '135792468', '199713579242', 'IDN'),
+('David Brown', 45, 'male', '246801357', '292224680132', 'LKA'),
+('Elena Petrova', 16, 'female', '369258147', NULL, 'SGP'),
+('Carlos Mendez', 31, 'male', '258147369', '222225814732', 'IND'),
+('Linda Nguyen', 27, 'female', '147258369', '321214725832', 'THA');
+
 /*
 -- Query: SELECT * FROM mydb.seat
 LIMIT 0, 1000
@@ -1828,3 +1865,16 @@ INSERT INTO `seat` (`id`,`seat_number`,`seat_class_id`,`airplane_number`) VALUES
 INSERT INTO `seat` (`id`,`seat_number`,`seat_class_id`,`airplane_number`) VALUES (1792,'26D',2,'PK-AAA');
 INSERT INTO `seat` (`id`,`seat_number`,`seat_class_id`,`airplane_number`) VALUES (1793,'26G',2,'PK-AAA');
 INSERT INTO `seat` (`id`,`seat_number`,`seat_class_id`,`airplane_number`) VALUES (1794,'26J',2,'PK-AAA');
+
+
+-- INSERT INTO `booking` (registered_user_id, date, price, schedule_id, seat_id, passenger_id) VALUES
+-- (null, '2024-10-15 10:30:00', 150, 3, 1313, 14),
+-- (2, '2024-10-15 12:00:00', 200, 4, 100, 7),
+-- (3, '2024-10-15 14:15:00', 250, 5, 173, 8),
+-- (null, '2024-10-16 16:00:00', 175, 3, 1314, 18),
+-- (null, '2024-10-16 18:45:00', 225, 4, 177, 17),
+-- (null, '2024-10-16 20:30:00', 300, 5, 69, 16),
+-- (2, '2024-10-16 09:15:00', 160, 3, 1315, 7),
+-- (3, '2024-10-17 11:30:00', 210, 4, 88, 8),
+-- (4, '2024-10-17 13:45:00', 280, 5, 93, 9),
+-- (2, '2024-10-17 15:00:00', 190, 6, 100, 7);
