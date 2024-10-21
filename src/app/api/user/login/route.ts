@@ -1,9 +1,9 @@
 import { executeQuery } from "../../database/database"
 import { compare } from "bcrypt"
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 
-export async function POST(request : Request) {
+export async function POST(request : NextRequest) {
     const requestBody = await request.json(); // Parse JSON body
     const username = requestBody.username; // Access username from JSON
     const password = requestBody.password; // Access password from JSON
