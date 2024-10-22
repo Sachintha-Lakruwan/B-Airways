@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   setArrivalAirport,
   setDepartureAirport,
-  setArrivalDate,
+  setPassengerClass,
   setDepartureDate,
   setPassengerCount,
   checkFirstStage,
@@ -24,6 +24,8 @@ const passengerCountsList = [
   { key: 4, label: "4" },
   { key: 5, label: "5" },
 ];
+
+// make a class list for the select component
 
 interface Country {
   key: string;
@@ -155,18 +157,22 @@ export default function FlightSearch() {
             />
           </div>
           <div className=" w-full h-20 col-span-2">
-            <DatePicker
-              label="Arriving"
-              className="w-full"
+            <Select
+              items={countries}
+              label={<p className="🛫 font-bold text-lg">Class</p>}
+              placeholder="Select an option"
               size="lg"
               variant="underlined"
+              className=" w-full h-full"
               onChange={(e) => {
-                dispatch(
-                  setArrivalDate(10000 * e.year + 100 * e.month + e.day)
-                );
+                dispatch(setPassengerClass(e.target.value));
                 dispatch(checkFirstStage());
               }}
-            />
+            >
+              {countries.map((i) => (
+                <SelectItem key={i.key}>{i.label}</SelectItem>
+              ))}
+            </Select>
           </div>
           <div className=" w-full h-20 col-span-2">
             <Button
