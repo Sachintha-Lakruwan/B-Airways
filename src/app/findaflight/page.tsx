@@ -73,25 +73,30 @@ export default function SelectFlight() {
       <div className=" w-full h-full  p-20 pt-28">
         <div className=" w-full rounded-lg bg-sky-100 drop-shadow-lg mb-3 p-10 glass1">
           <p className=" text-center text-5xl font-extrabold text-sky-900 capitalize tracking-wide">
-            Flight from sri lanka to india
+            Flight from {departure_flights[0].departure_country} to{" "}
+            {departure_flights[0].arrival_country}
           </p>
           <p className=" text-center font-extralight tracking-tighter text-sky-900 capitalize mt-2 italic">
             Select a Flight to continue...
           </p>
         </div>
-        <div className=" w-full h-14 rounded-lg bg-sky-900 drop-shadow-lg mb-3 grid grid-cols-5 px-8 items-center text-sky-100 font-semibold glass2">
+        <div className=" w-full h-14 rounded-lg bg-sky-900 drop-shadow-lg mb-3 grid grid-cols-7 px-8 items-center text-sky-100 font-semibold glass2 text-center">
           <div>Date</div>
           <div>Time</div>
+          <div>Departure Airport</div>
+          <div>Arrival Airport</div>
           <div>Duration</div>
           <div>Cost</div>
           <div>Model</div>
         </div>
-        <div className=" max-h-[70%] overflow-scroll hide-scroll">
+        <div className=" max-h-[70%] overflow-scroll hide-scroll text-center">
           {departure_flights.map((flight) => (
             <FlightRaw
               key={crypto.randomUUID()}
               DateTime={flight.date}
               Duration={flight.duration}
+              DepartureAirport={flight.departure_airport}
+              ArrivalAirport={flight.arrival_airport}
               Cost={flight.cost}
               Model={flight.model}
             />
