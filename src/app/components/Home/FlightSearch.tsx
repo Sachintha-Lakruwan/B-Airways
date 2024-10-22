@@ -11,7 +11,6 @@ import {
   setDepartureAirport,
   setArrivalDate,
   setDepartureDate,
-  setPassengerClass,
   setPassengerCount,
   checkFirstStage,
 } from "@/app/GlobalRedux/Slices/FlightDetails/flight";
@@ -31,11 +30,6 @@ interface Country {
   label: string;
 }
 
-interface Class {
-  key: string;
-  label: string;
-}
-
 export default function FlightSearch() {
   const isStageOneCompleted = useSelector(
     (state: RootState) => state.flight.isStageOneCompleted
@@ -45,19 +39,15 @@ export default function FlightSearch() {
   const [loading, setLoading] = useState(false);
 
   const [countries, setCountries] = useState<Country[]>([]);
-  const [classes, setClasses] = useState<Class[]>([]);
   const [buttonWarning, setButtonWarning] = useState<boolean>(false);
 
   const fetchCountryNames = async () => {
     try {
       setLoading(true);
       const countriesResponse = await fetch("/api/flightsearch/countries");
-      const classesResponse = await fetch("/api/flightsearch/classes");
-      if (countriesResponse && classesResponse) {
+      if (countriesResponse) {
         const countriesTemp = await countriesResponse.json();
-        const classesTemp = await classesResponse.json();
         setCountries(countriesTemp);
-        setClasses(classesTemp);
       }
     } catch (error) {
       console.log(error);
@@ -132,34 +122,6 @@ export default function FlightSearch() {
               </Select>
             </div>
           </div>
-          <div className=" w-full h-20">
-            <DatePicker
-              label="Departing"
-              className="w-full"
-              size="lg"
-              variant="underlined"
-              onChange={(e) => {
-                dispatch(
-                  setDepartureDate(10000 * e.year + 100 * e.month + e.day)
-                );
-                dispatch(checkFirstStage());
-              }}
-            />
-          </div>{" "}
-          <div className=" w-full h-20">
-            <DatePicker
-              label="Arriving"
-              className="w-full"
-              size="lg"
-              variant="underlined"
-              onChange={(e) => {
-                dispatch(
-                  setArrivalDate(10000 * e.year + 100 * e.month + e.day)
-                );
-                dispatch(checkFirstStage());
-              }}
-            />
-          </div>
           <div className=" w-full h-20 col-span-2">
             <Select
               items={passengerCountsList}
@@ -179,22 +141,32 @@ export default function FlightSearch() {
             </Select>
           </div>
           <div className=" w-full h-20 col-span-2">
-            <Select
-              items={countries}
-              label={<p className="🛫 font-bold text-lg">Class</p>}
-              placeholder="Select Class"
+            <DatePicker
+              label="Departing"
+              className="w-full"
               size="lg"
               variant="underlined"
-              className=" w-full h-full"
               onChange={(e) => {
-                dispatch(setPassengerClass(e.target.value));
+                dispatch(
+                  setDepartureDate(10000 * e.year + 100 * e.month + e.day)
+                );
                 dispatch(checkFirstStage());
               }}
-            >
-              {classes.map((i) => (
-                <SelectItem key={i.key}>{i.label}</SelectItem>
-              ))}
-            </Select>
+            />
+          </div>
+          <div className=" w-full h-20 col-span-2">
+            <DatePicker
+              label="Arriving"
+              className="w-full"
+              size="lg"
+              variant="underlined"
+              onChange={(e) => {
+                dispatch(
+                  setArrivalDate(10000 * e.year + 100 * e.month + e.day)
+                );
+                dispatch(checkFirstStage());
+              }}
+            />
           </div>
           <div className=" w-full h-20 col-span-2">
             <Button
