@@ -1,5 +1,10 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Database Setup
+
+- Use the latest model file (`./model files/db-v<latest>.mwb`), open it with mysql workbench and use "forward engineer" option to create the schema along with the tables 
+- Run the `dummy.sql` file to load dummy data 
+
 ## Getting Started
 
 First, run the development server:
