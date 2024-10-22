@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import NavBar from "./components/NavBar";
 import { Providers } from "./GlobalRedux/providor";
+import { Nunito } from "next/font/google";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -20,6 +21,8 @@ export const metadata: Metadata = {
   description: "Beyond your expectations",
 };
 
+const nunito = Nunito({ subsets: ["latin"] });
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -28,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased `}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased ${nunito.className}`}
       >
         <Providers>
           <NavBar />

@@ -1,132 +1,102 @@
 "use client";
 
 import React from "react";
-import {
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  getKeyValue,
-} from "@nextui-org/react";
+import FlightRaw from "./FlightRaw";
+import img from "@/public/hero-image.jpg";
+import Image from "next/image";
 
-const rows = [
+const departure_flights = [
   {
-    key: "1",
-    name: "Tony Reichert",
-    role: "CEO",
-    status: "Active",
+    date: "2024-10-14T18:30:00.000Z",
+    delay: "00:00:00",
+    distance: 4647,
+    duration: "07:00:00",
+    departure_airport: "CGK",
+    arrival_airport: "BOM",
+    arrival_country: "Indonesia",
+    departure_country: "India",
+    cost: 350,
+    model: "Boeing 777",
   },
   {
-    key: "2",
-    name: "Zoey Lang",
-    role: "Technical Lead",
-    status: "Paused",
+    date: "2024-10-16T09:45:00.000Z",
+    delay: "00:15:00",
+    distance: 5000,
+    duration: "06:45:00",
+    departure_airport: "LHR",
+    arrival_airport: "JFK",
+    arrival_country: "United States",
+    departure_country: "United Kingdom",
+    cost: 450,
+    model: "Airbus A380",
   },
   {
-    key: "3",
-    name: "Jane Fisher",
-    role: "Senior Developer",
-    status: "Active",
+    date: "2024-10-18T21:20:00.000Z",
+    delay: "00:30:00",
+    distance: 3780,
+    duration: "05:30:00",
+    departure_airport: "SIN",
+    arrival_airport: "SYD",
+    arrival_country: "Australia",
+    departure_country: "Singapore",
+    cost: 300,
+    model: "Boeing 787 Dreamliner",
   },
   {
-    key: "4",
-    name: "William Howard",
-    role: "Community Manager",
-    status: "Vacation",
-  },
-  {
-    key: "1",
-    name: "Tony Reichert",
-    role: "CEO",
-    status: "Active",
-  },
-  {
-    key: "2",
-    name: "Zoey Lang",
-    role: "Technical Lead",
-    status: "Paused",
-  },
-  {
-    key: "3",
-    name: "Jane Fisher",
-    role: "Senior Developer",
-    status: "Active",
-  },
-  {
-    key: "4",
-    name: "William Howard",
-    role: "Community Manager",
-    status: "Vacation",
-  },
-  {
-    key: "1",
-    name: "Tony Reichert",
-    role: "CEO",
-    status: "Active",
-  },
-  {
-    key: "2",
-    name: "Zoey Lang",
-    role: "Technical Lead",
-    status: "Paused",
-  },
-  {
-    key: "3",
-    name: "Jane Fisher",
-    role: "Senior Developer",
-    status: "Active",
-  },
-  {
-    key: "4",
-    name: "William Howard",
-    role: "Community Manager",
-    status: "Vacation",
-  },
-];
-
-const columns = [
-  {
-    key: "name",
-    label: "NAME",
-  },
-  {
-    key: "role",
-    label: "ROLE",
-  },
-  {
-    key: "status",
-    label: "STATUS",
+    date: "2024-10-20T14:10:00.000Z",
+    delay: "00:00:00",
+    distance: 800,
+    duration: "02:00:00",
+    departure_airport: "CDG",
+    arrival_airport: "FCO",
+    arrival_country: "Italy",
+    departure_country: "France",
+    cost: 150,
+    model: "Airbus A320",
   },
 ];
 
 export default function SelectFlight() {
   //   const [isLoading, setIsLoading] = useState<boolean>(true);
   return (
-    <div className=" w-full h-screen p-20 pt-28">
-      <div className=" w-full h-full">
-        <Table
-          color="success"
-          selectionMode="single"
-          aria-label="Example table with dynamic content"
-          className=" w-full h-full"
-        >
-          <TableHeader>
-            {columns.map((column) => (
-              <TableColumn key={column.key}>{column.label}</TableColumn>
-            ))}
-          </TableHeader>
-          <TableBody className=" h-full">
-            {rows.map((row) => (
-              <TableRow key={row.key}>
-                {(columnKey) => (
-                  <TableCell>{getKeyValue(row, columnKey)}</TableCell>
-                )}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+    <div className=" w-full h-screen">
+      <div className=" bg-sky-400 w-full h-full absolute">
+        <Image
+          src={img}
+          fill
+          sizes="100vw"
+          style={{ objectFit: "cover" }}
+          priority={true}
+          alt="hero image"
+        ></Image>
+      </div>
+      <div className=" w-full h-full  p-20 pt-28">
+        <div className=" w-full rounded-lg bg-sky-100 drop-shadow-lg mb-3 p-10 glass1">
+          <p className=" text-center text-5xl font-extrabold text-sky-900 capitalize tracking-wide">
+            Flight from sri lanka to india
+          </p>
+          <p className=" text-center font-extralight tracking-tighter text-sky-900 capitalize mt-2 italic">
+            Select a Flight to continue...
+          </p>
+        </div>
+        <div className=" w-full h-14 rounded-lg bg-sky-900 drop-shadow-lg mb-3 grid grid-cols-5 px-8 items-center text-sky-100 font-semibold glass2">
+          <div>Date</div>
+          <div>Time</div>
+          <div>Duration</div>
+          <div>Cost</div>
+          <div>Model</div>
+        </div>
+        <div className=" max-h-[70%] overflow-scroll hide-scroll">
+          {departure_flights.map((flight) => (
+            <FlightRaw
+              key={crypto.randomUUID()}
+              DateTime={flight.date}
+              Duration={flight.duration}
+              Cost={flight.cost}
+              Model={flight.model}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
