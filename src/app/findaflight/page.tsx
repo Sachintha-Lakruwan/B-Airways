@@ -80,7 +80,7 @@ export default function SelectFlight() {
             Select a Flight to continue...
           </p>
         </div>
-        <div className=" w-full h-14 rounded-lg bg-sky-900 drop-shadow-lg mb-3 grid grid-cols-7 px-8 items-center text-sky-100 font-semibold glass2 text-center">
+        <div className=" w-full h-14 rounded-lg bg-sky-900 drop-shadow-lg mb-3 grid grid-cols-7 px-8 items-center text-sky-100 font-bold glass2 text-center">
           <div>Date</div>
           <div>Time</div>
           <div>Departure Airport</div>
