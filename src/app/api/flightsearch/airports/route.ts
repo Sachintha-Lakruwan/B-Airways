@@ -1,40 +1,20 @@
+import { executeQuery } from "../../database/database";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const airports = [
-    {
-      key: "CGK",
-      label: "Soekarno-Hatta International Airport",
-    },
-    {
-      key: "BOM",
-      label: "Chhatrapati Shivaji Maharaj International Airport",
-    },
-    {
-      key: "LHR",
-      label: "London Heathrow Airport",
-    },
-    {
-      key: "JFK",
-      label: "John F. Kennedy International Airport",
-    },
-    {
-      key: "SIN",
-      label: "Singapore Changi Airport",
-    },
-    {
-      key: "SYD",
-      label: "Sydney Kingsford Smith Airport",
-    },
-    {
-      key: "CDG",
-      label: "Charles de Gaulle Airport",
-    },
-    {
-      key: "FCO",
-      label: "Leonardo da Vinci International Airport",
-    },
-  ];
+  try {
+    // SQL query to fetch airport codes and names
+    const airports = await executeQuery(`
+      SELECT 
+        a.code AS \`key\`, 
+        CONCAT(a.name, ', ', l.name) AS \`label\`
+      FROM airport a
+      JOIN location l ON a.city_id = l.id
+    `);
 
-  return NextResponse.json(airports);
+    return NextResponse.json(airports);
+  } catch (error) {
+    console.error("Error fetching airports:", error);
+    return NextResponse.json({ message: "An error occurred" }, { status: 500 });
+  }
 }
