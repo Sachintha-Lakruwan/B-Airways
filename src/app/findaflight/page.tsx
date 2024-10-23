@@ -97,11 +97,9 @@ export default function SelectFlight() {
               Select a Flight to continue...
             </p>
           </div>
-          <div className=" w-full h-14 rounded-lg bg-sky-900 drop-shadow-lg mb-3 grid grid-cols-7 px-8 items-center text-sky-100 font-bold glass2 text-center">
+          <div className=" w-full h-14 rounded-lg bg-sky-900 drop-shadow-lg mb-3 grid grid-cols-5 px-8 items-center text-sky-100 font-bold glass2 text-center">
             <div>Date</div>
             <div>Time</div>
-            <div>Departure Airport</div>
-            <div>Arrival Airport</div>
             <div>Duration</div>
             <div>Cost</div>
             <div>Model</div>
@@ -113,8 +111,6 @@ export default function SelectFlight() {
                 id={flight.key}
                 DateTime={flight.date}
                 Duration={flight.duration}
-                DepartureAirport={flight.departure_airport}
-                ArrivalAirport={flight.arrival_airport}
                 Cost={flight.cost}
                 Model={flight.model}
                 handleClick={handleSelect}
