@@ -8,7 +8,7 @@ export async function executeQuery(query: string, params: any[] = []): Promise<a
     try {
         connection = await mysql.createConnection(creds);
         const [results] = await connection.execute<any[]>(query, params); // Only destructure results
-        return results[0];
+        return results;
     } catch (error) {
         console.error('Error executing query:', error);
         throw error;
