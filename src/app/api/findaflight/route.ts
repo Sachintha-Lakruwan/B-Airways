@@ -1,60 +1,64 @@
-import { NextRequest, NextResponse } from "next/server";
-import { executeQuery } from "../database/database";
+import { NextResponse } from "next/server";
 
-type FlightSearchResult = {
-  date: Date;
-  delay: string;
-  distance: string;
-  duration: string;
-  departure_airport: string;
-  arrival_airport: string;
-  departure_country: string;
-  arrival_country: string;
-};
-
-type FlightSearchResultResponse = {
-  departure_flights: FlightSearchResult[];
-  arrival_flights: FlightSearchResult[];
-};
-
-export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-
-  const departure_airport = searchParams.get("departure_airport");
-  const arrival_airport = searchParams.get("arrival_airport");
-  const departure_date = searchParams.get("departure_date");
-  const arrival_date = searchParams.get("arrival_date");
-
-  const flights: FlightSearchResultResponse = {
-    departure_flights: [],
-    arrival_flights: [],
-  };
-
-  if (
-    typeof departure_airport !== "string" ||
-    typeof arrival_airport !== "string" ||
-    typeof departure_date !== "string" ||
-    typeof arrival_date !== "string"
-  ) {
-    return new Response("Invalid form data", { status: 400 });
+export async function GET() {
+  interface Flight {
+    key: string;
+    date: string;
+    duration: string;
+    departure_airport: string;
+    arrival_airport: string;
+    departure_country: string;
+    arrival_country: string;
+    cost: number;
+    model: string;
   }
 
-  try {
-    const dep_flights: FlightSearchResult[] = await executeQuery(
-      "CALL `reservation_flightSearch`(?, ?, ?)",
-      [departure_airport, arrival_airport, departure_date]
-    );
-    const arr_flights: FlightSearchResult[] = await executeQuery(
-      "CALL `reservation_flightSearch`(?, ?, ?)",
-      [arrival_airport, departure_airport, arrival_date]
-    );
+  const departure_flights: Flight[] = [
+    {
+      key: "flight1",
+      date: "2024-10-14T18:30:00.000Z",
+      duration: "07:00:00",
+      departure_airport: "CGK",
+      arrival_airport: "BOM",
+      departure_country: "Indonesia",
+      arrival_country: "India",
+      cost: 350,
+      model: "Boeing 777",
+    },
+    {
+      key: "flight2",
+      date: "2024-10-16T09:45:00.000Z",
+      duration: "06:45:00",
+      departure_airport: "LHR",
+      arrival_airport: "JFK",
+      departure_country: "United Kingdom",
+      arrival_country: "United States",
+      cost: 450,
+      model: "Airbus A380",
+    },
+    {
+      key: "flight3",
+      date: "2024-10-18T21:20:00.000Z",
+      duration: "05:30:00",
+      departure_airport: "SIN",
+      arrival_airport: "SYD",
+      departure_country: "Singapore",
+      arrival_country: "Australia",
+      cost: 300,
+      model: "Boeing 787 Dreamliner",
+    },
+    {
+      key: "flight4",
+      date: "2024-10-20T14:10:00.000Z",
+      duration: "02:00:00",
+      departure_airport: "CDG",
+      arrival_airport: "FCO",
+      departure_country: "France",
+      arrival_country: "Italy",
+      cost: 150,
+      model: "Airbus A320",
+    },
+  ];
 
-    flights.departure_flights = dep_flights;
-    flights.arrival_flights = arr_flights;
-
-    return NextResponse.json(flights);
-  } catch (err) {
-    console.error(err);
-    return NextResponse.json({ message: "An error occurred" }, { status: 500 });
-  }
+  return NextResponse.json(departure_flights);
 }
