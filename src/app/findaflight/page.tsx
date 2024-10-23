@@ -33,26 +33,26 @@ export default function SelectFlight() {
     try {
       setIsLoading(true);
 
-      // Himath - Change the API endpoint
-      console.log(
-        departure_airport,
-        arrival_airport,
-        passenger_count,
-        passenger_class
+      //Change the API endpoint to dynamically include query parameters
+      console.log(departure_airport, arrival_airport, passenger_count, passenger_class);
+
+      // Dynamically constructing the API endpoint with search parameters
+      const flightsResponse = await fetch(
+        `/api/findaflight?departure_airport=${departure_airport}&arrival_airport=${arrival_airport}&passenger_count=${passenger_count}&passenger_class=${passenger_class}`
       );
 
-      const flightsResponse = await fetch("/api/findaflight");
-      if (flightsResponse) {
-        const countriesTemp = await flightsResponse.json();
-        setFlights(countriesTemp);
+      if (flightsResponse.ok) {
+        const flightData = await flightsResponse.json();
+        setFlights(flightData);  // Update state with the fetched flights data
+      } else {
+        console.error("Error fetching flights: ", flightsResponse.statusText);
       }
     } catch (error) {
       console.log(error);
     } finally {
       setIsLoading(false);
-      // setIsLoading(true);
     }
-  };
+};
 
   useEffect(() => {
     fetchFlights();
