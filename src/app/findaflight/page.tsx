@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import FlightRaw from "./FlightRaw";
 import img from "@/public/pexels-hson-5071155.jpg";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface Flight {
   key: string;
@@ -40,6 +41,12 @@ export default function SelectFlight() {
   useEffect(() => {
     fetchFlights();
   }, []);
+
+  const router = useRouter();
+
+  function handleSelect(id: string) {
+    router.push(`/filldetails/${id}`);
+  }
 
   return (
     <div className=" w-full h-screen">
@@ -87,12 +94,14 @@ export default function SelectFlight() {
             {flights.map((flight: Flight) => (
               <FlightRaw
                 key={crypto.randomUUID()}
+                id={flight.key}
                 DateTime={flight.date}
                 Duration={flight.duration}
                 DepartureAirport={flight.departure_airport}
                 ArrivalAirport={flight.arrival_airport}
                 Cost={flight.cost}
                 Model={flight.model}
+                handleClick={handleSelect}
               />
             ))}
           </div>
