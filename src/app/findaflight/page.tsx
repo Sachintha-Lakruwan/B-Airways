@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import FlightRaw from "./FlightRaw";
 import img from "@/public/pexels-hson-5071155.jpg";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface Flight {
   key: string;
@@ -19,12 +19,28 @@ interface Flight {
 }
 
 export default function SelectFlight() {
+  const searchParams = useSearchParams();
+
+  const departure_airport = searchParams.get("dep");
+  const arrival_airport = searchParams.get("arr");
+  const passenger_count = searchParams.get("passenger");
+  const passenger_class = searchParams.get("class");
+
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [flights, setFlights] = useState<Flight[]>([]);
 
   const fetchFlights = async () => {
     try {
       setIsLoading(true);
+
+      // Himath - Change the API endpoint
+      console.log(
+        departure_airport,
+        arrival_airport,
+        passenger_count,
+        passenger_class
+      );
+
       const flightsResponse = await fetch("/api/findaflight");
       if (flightsResponse) {
         const countriesTemp = await flightsResponse.json();
@@ -45,7 +61,7 @@ export default function SelectFlight() {
   const router = useRouter();
 
   function handleSelect(id: string) {
-    router.push(`/filldetails/${id}`);
+    router.push(`/filldetails?flight=${id}`);
   }
 
   return (

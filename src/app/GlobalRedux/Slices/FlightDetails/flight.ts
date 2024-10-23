@@ -5,7 +5,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export interface FlightState {
   departureAirport: string;
   arrivalAirport: string;
-  departureDate: number;
+  departureDate: string;
   passengerCount: number;
   passengerClass: string;
   isStageOneCompleted: boolean;
@@ -14,7 +14,7 @@ export interface FlightState {
 const initialState: FlightState = {
   departureAirport: "",
   arrivalAirport: "",
-  departureDate: 0,
+  departureDate: "",
   passengerCount: 0,
   passengerClass: "",
   isStageOneCompleted: false,
@@ -28,7 +28,7 @@ export const flightSlice = createSlice({
       if (
         state.arrivalAirport == "" ||
         state.departureAirport == "" ||
-        state.departureDate == 0 ||
+        state.departureDate == "" ||
         state.passengerClass == "" ||
         state.passengerCount == 0
       ) {

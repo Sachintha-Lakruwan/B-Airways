@@ -34,21 +34,30 @@ interface Country {
 }
 
 const classesList = [
-  { key: "Economy", label: "Economy" },
-  { key: "Business", label: "Business" },
-  { key: "First", label: "First" },
+  { key: "eco", label: "Economy" },
+  { key: "bus", label: "Business" },
+  { key: "fir", label: "First" },
 ];
 
 export default function FlightSearch() {
   const isStageOneCompleted = useSelector(
     (state: RootState) => state.flight.isStageOneCompleted
   );
-  // const departureAirport = useSelector(
-  //   (state: RootState) => state.flight.departureAirport
-  // );
-  // const arrivalAirport = useSelector(
-  //   (state: RootState) => state.flight.arrivalAirport
-  // );
+  const departureAirport = useSelector(
+    (state: RootState) => state.flight.departureAirport
+  );
+  const arrivalAirport = useSelector(
+    (state: RootState) => state.flight.arrivalAirport
+  );
+  const passengerCount = useSelector(
+    (state: RootState) => state.flight.passengerCount
+  );
+  const passengerClass = useSelector(
+    (state: RootState) => state.flight.passengerClass
+  );
+  const departureDate = useSelector(
+    (state: RootState) => state.flight.departureDate
+  );
   const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(true);
@@ -79,7 +88,9 @@ export default function FlightSearch() {
 
   function handleSubmit() {
     if (isStageOneCompleted) {
-      router.push("/findaflight");
+      router.push(
+        `/findaflight?dep=${departureAirport}&arr=${arrivalAirport}&passenger=${passengerCount}&date=${departureDate}&class=${passengerClass}`
+      );
     } else {
       setButtonWarning(true);
       setTimeout(() => {
@@ -180,7 +191,7 @@ export default function FlightSearch() {
               minValue={today(getLocalTimeZone())}
               onChange={(e) => {
                 dispatch(
-                  setDepartureDate(10000 * e.year + 100 * e.month + e.day)
+                  setDepartureDate(e.year + "/" + e.month + "/" + e.day)
                 );
                 dispatch(checkFirstStage());
               }}
