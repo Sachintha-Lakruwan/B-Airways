@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import React from "react";
-import img from "@/public/hero-image.png";
+import img from "@/public/pexels-hson-5071155.jpg";
 import FlightSearch from "./FlightSearch";
 
 export default function Hero() {
