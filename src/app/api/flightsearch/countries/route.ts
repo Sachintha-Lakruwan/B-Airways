@@ -1,26 +1,14 @@
+import { executeQuery } from "../../database/database";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const countries = [
-    { key: "CA", label: "Canada" },
-    { key: "GB", label: "United Kingdom" },
-    { key: "AU", label: "Australia" },
-    { key: "IN", label: "India" },
-    { key: "DE", label: "Germany" },
-    { key: "FR", label: "France" },
-    { key: "IT", label: "Italy" },
-    { key: "JP", label: "Japan" },
-    { key: "CN", label: "China" },
-    { key: "BR", label: "Brazil" },
-    { key: "ZA", label: "South Africa" },
-    { key: "RU", label: "Russia" },
-    { key: "MX", label: "Mexico" },
-    { key: "KR", label: "South Korea" },
-    { key: "ES", label: "Spain" },
-    { key: "AR", label: "Argentina" },
-    { key: "NG", label: "Nigeria" },
-    { key: "EG", label: "Egypt" },
-    { key: "SA", label: "Saudi Arabia" },
-  ];
-  return NextResponse.json(countries);
+  try {
+    const countries = await executeQuery(
+      "SELECT `code` as `key`, `name` as `label` FROM `country`;"
+    );
+    return NextResponse.json(countries);
+  } catch (error) {
+    console.error("Error fetching countries:", error);
+    return NextResponse.json({ message: "An error occurred" }, { status: 500 });
+  }
 }
