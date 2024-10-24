@@ -76,12 +76,47 @@ const seats: SeatRow[] = [
   ],
 ];
 
+interface Details {
+  name: string;
+  age: number;
+  gender: string;
+  passportNumber: string;
+  nic: string;
+  country_code: string;
+  flight: string;
+  seat_number: string;
+}
+
+const details: Details = {
+  name: "Kavindu",
+  age: 18,
+  gender: "male",
+  passportNumber: "A12345623",
+  nic: "200034456532",
+  country_code: "Sri Lanka",
+  flight: "3",
+  seat_number: "44A",
+};
+
 const FillDetails = () => {
   const searchParams = useSearchParams();
   const flight = searchParams.get("flight");
   // const passengerClass = searchParams.get("class");
 
   // funtion to fetch seat details using flight and class
+
+  const handleSubmit = async () => {
+    const response = await fetch("/api/booking/reserve", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(details),
+    });
+
+    const result = await response.json();
+    console.log(result);
+  };
 
   const [isPickingSeat, setIsPickingSeat] = useState<boolean>(false);
   const [pickedSeat, setPickedSeat] = useState<string>("");
@@ -98,6 +133,7 @@ const FillDetails = () => {
     // send passenger details, booking id, seat number, flight id to the backend
     if (pickedSeat != "") {
       setPickSeatWarning(false);
+      handleSubmit();
       router.push(`/payment?flight=${flight}&seat=${pickedSeat}`);
     } else {
       setPickSeatWarning(true);
