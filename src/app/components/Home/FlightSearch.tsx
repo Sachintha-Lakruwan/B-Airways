@@ -11,24 +11,22 @@ import {
   setDepartureAirport,
   setPassengerClass,
   setDepartureDate,
-  setPassengerCount,
+  setBaggageRange,
   checkFirstStage,
 } from "@/app/GlobalRedux/Slices/FlightDetails/flight";
 import { RootState } from "@/app/GlobalRedux/store";
 import { useRouter } from "next/navigation";
 import { getLocalTimeZone, today } from "@internationalized/date";
 
-const passengerCountsList = [
-  { key: 1, label: "1" },
-  { key: 2, label: "2" },
-  { key: 3, label: "3" },
-  { key: 4, label: "4" },
-  { key: 5, label: "5" },
+const baggageList = [
+  { key: 1, label: "0-10kg" },
+  { key: 2, label: "10-20kg" },
+  { key: 3, label: "20-30kg" },
+  { key: 4, label: "30-40kg" },
+  { key: 5, label: "40-50kg" },
 ];
 
-// make a class list for the select component
-
-interface Country {
+interface Airport {
   key: string;
   label: string;
 }
@@ -49,8 +47,8 @@ export default function FlightSearch() {
   const arrivalAirport = useSelector(
     (state: RootState) => state.flight.arrivalAirport
   );
-  const passengerCount = useSelector(
-    (state: RootState) => state.flight.passengerCount
+  const baggageRange = useSelector(
+    (state: RootState) => state.flight.baggageRange
   );
   const passengerClass = useSelector(
     (state: RootState) => state.flight.passengerClass
@@ -62,17 +60,17 @@ export default function FlightSearch() {
 
   const [loading, setLoading] = useState(true);
 
-  const [countries, setCountries] = useState<Country[]>([]);
+  const [airports, setAirports] = useState<Airport[]>([]);
   const [buttonWarning, setButtonWarning] = useState<boolean>(false);
 
   const fetchCountryNames = async () => {
     try {
       setLoading(true);
-      const countriesResponse = await fetch("/api/flightsearch/airports");
-      if (countriesResponse) {
-        const countriesTemp = await countriesResponse.json();
-        setCountries(countriesTemp);
-        console.log(countriesTemp);
+      const airportsResponse = await fetch("/api/flightsearch/airports");
+      if (airportsResponse) {
+        const airportTemp = await airportsResponse.json();
+        setAirports(airportTemp);
+        console.log(airportTemp);
       }
     } catch (error) {
       console.log(error);
@@ -90,7 +88,7 @@ export default function FlightSearch() {
   function handleSubmit() {
     if (isStageOneCompleted) {
       router.push(
-        `/findaflight?dep=${departureAirport}&arr=${arrivalAirport}&passenger=${passengerCount}&date=${departureDate}&class=${passengerClass}`
+        `/findaflight?dep=${departureAirport}&arr=${arrivalAirport}&baggage=${baggageRange}&date=${departureDate}&class=${passengerClass}`
       );
     } else {
       setButtonWarning(true);
@@ -99,12 +97,6 @@ export default function FlightSearch() {
       }, 2000);
     }
   }
-
-  // function handleSwap() {
-  //   const temp = departureAirport;
-  //   dispatch(setDepartureAirport(arrivalAirport));
-  //   dispatch(setArrivalAirport(temp));
-  // }
 
   return (
     <div className=" w-full grid grid-cols-6 gap-6 grid-rows-3">
@@ -132,7 +124,7 @@ export default function FlightSearch() {
                   dispatch(checkFirstStage());
                 }}
               >
-                {countries.map((i) => (
+                {airports.map((i) => (
                   <SelectItem key={i.key}>{i.label}</SelectItem>
                 ))}
               </Select>
@@ -142,7 +134,7 @@ export default function FlightSearch() {
             </div>
             <div className=" w-full">
               <Select
-                items={countries}
+                items={airports}
                 label={
                   <p className="🛫 font-bold text-lg text-zinc-900">
                     Arrival Airport
@@ -157,7 +149,7 @@ export default function FlightSearch() {
                   dispatch(checkFirstStage());
                 }}
               >
-                {countries.map((i) => (
+                {airports.map((i) => (
                   <SelectItem key={i.key}>{i.label}</SelectItem>
                 ))}
               </Select>
@@ -165,20 +157,18 @@ export default function FlightSearch() {
           </div>
           <div className=" w-full h-20 col-span-2">
             <Select
-              items={passengerCountsList}
-              label={
-                <p className="font-bold text-lg text-zinc-900">Passengers</p>
-              }
+              items={baggageList}
+              label={<p className="font-bold text-lg text-zinc-900">Baggage</p>}
               placeholder="Select Passengers"
               size="lg"
               variant="underlined"
               className=" w-full h-full"
               onChange={(e) => {
-                dispatch(setPassengerCount(e.target.value));
+                dispatch(setBaggageRange(e.target.value));
                 dispatch(checkFirstStage());
               }}
             >
-              {passengerCountsList.map((num) => (
+              {baggageList.map((num) => (
                 <SelectItem key={num.key}>{num.label}</SelectItem>
               ))}
             </Select>
