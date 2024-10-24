@@ -1,12 +1,12 @@
 import React from "react";
 
 interface FlightRawProps {
-  id: string;
+  id: number;
   DateTime: string;
   Duration: string;
   Cost: number;
   Model: string;
-  handleClick: (id: string) => void;
+  handleClick: (id: number) => void;
 }
 
 export default function FlightRaw({

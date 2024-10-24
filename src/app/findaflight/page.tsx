@@ -7,7 +7,7 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 
 interface Flight {
-  key: string;
+  key: number;
   date: string;
   duration: string;
   departure_airport: string;
@@ -41,7 +41,9 @@ export default function SelectFlight() {
         passenger_class
       );
 
-      const flightsResponse = await fetch("/api/findaflight");
+      const flightsResponse = await fetch(
+        `/api/findaflight?departure_airport=${departure_airport}&arrival_airport=${arrival_airport}&departure_date=2022-12-12&seat_class=${passenger_class}`
+      );
       if (flightsResponse) {
         const countriesTemp = await flightsResponse.json();
         setFlights(countriesTemp);
@@ -50,7 +52,7 @@ export default function SelectFlight() {
       console.log(error);
     } finally {
       setIsLoading(false);
-      // setIsLoading(true);
+      console.log(flights);
     }
   };
 
@@ -60,7 +62,7 @@ export default function SelectFlight() {
 
   const router = useRouter();
 
-  function handleSelect(id: string) {
+  function handleSelect(id: number) {
     router.push(`/filldetails?flight=${id}&class=${passenger_class}`);
   }
 
@@ -76,7 +78,7 @@ export default function SelectFlight() {
           alt="hero image"
         ></Image>
       </div>
-      {isLoading ? (
+      {isLoading || !flights[0] ? (
         <div className=" w-full h-full p-20 pt-28 absolute z-10 grid grid-rows-7 gap-6">
           <div className=" w-full h-full animate-pulse bg-zinc-100 rounded-lg opacity-20 row-span-2"></div>
           <div className=" w-full h-full animate-pulse bg-sky-500 rounded-lg opacity-20 "></div>

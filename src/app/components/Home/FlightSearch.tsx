@@ -34,9 +34,9 @@ interface Country {
 }
 
 const classesList = [
-  { key: "eco", label: "Economy" },
-  { key: "bus", label: "Business" },
-  { key: "fir", label: "First" },
+  { key: "economy", label: "Economy" },
+  { key: "business", label: "Business" },
+  { key: "platinum", label: "Platinum" },
 ];
 
 export default function FlightSearch() {
