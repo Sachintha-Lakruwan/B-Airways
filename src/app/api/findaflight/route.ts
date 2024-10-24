@@ -35,8 +35,8 @@ export async function GET(request: NextRequest) {
       "CALL `reservation_flightSearch`(?, ?, ?, ?)",
       [departure_airport, arrival_airport, departure_date, seat_class]
     );
-    const  flights : Flight[] = res[0]
-    // console.log(flights)
+    const flights: Flight[] = res[0] as Flight[];
+    // console.log(flights);
     return NextResponse.json(flights);
   } catch (err) {
     console.error(err);
@@ -44,8 +44,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-
-// FRontend format 
+// FRontend format
 // interface Flight {
 //   key: string;
 //   date: string;

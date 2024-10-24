@@ -72,6 +72,7 @@ export default function FlightSearch() {
       if (countriesResponse) {
         const countriesTemp = await countriesResponse.json();
         setCountries(countriesTemp);
+        console.log(countriesTemp);
       }
     } catch (error) {
       console.log(error);
