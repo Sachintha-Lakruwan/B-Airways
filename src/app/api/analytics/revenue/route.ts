@@ -10,6 +10,6 @@ export async function GET(request : NextRequest) {
         return new Response('Invalid form data', { status: 400 });
     }
 
-    const revenue = await executeQuery("SELECT SUM(price) AS `total_revenue`FROM booking LEFT JOIN schedule ON booking.schedule_id=schedule.id LEFT JOIN airplane ON airplane.tail_number=schedule.airplane_number LEFT JOIN airplane_model ON airplane.model_id=airplane_model.id WHERE airplane_model.name = ?;",[airplane_model]);
+    const revenue = await executeQuery("SELECT SUM(price) AS `total_revenue`FROM booking LEFT JOIN schedule ON booking.schedule_id=schedule.id LEFT JOIN airplane ON airplane.tail_number=schedule.airplane_number LEFT JOIN airplane_model ON airplane.model_id=airplane_model.id WHERE airplane_model.id = ?;",[airplane_model]);
     return NextResponse.json(revenue);
 }

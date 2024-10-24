@@ -8,16 +8,16 @@ export async function executeQuery(
 ): Promise<any[]> {
   let connection;
 
-  try {
-    connection = await mysql.createConnection(creds);
-    const [results] = await connection.execute<[any[], any]>(query, params); // Only destructure results
-    return results[0];
-  } catch (error) {
-    console.error("Error executing query:", error);
-    throw error;
-  } finally {
-    if (connection) {
-      await connection.end(); // Ensure the connection is closed
+    try {
+        connection = await mysql.createConnection(creds);
+        const [results] = await connection.execute<any[]>(query, params); // Only destructure results
+        return results;
+    } catch (error) {
+        console.error('Error executing query:', error);
+        throw error;
+    } finally {
+        if (connection) {
+            await connection.end(); // Ensure the connection is closed
+        }
     }
   }
-}
