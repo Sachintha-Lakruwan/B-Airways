@@ -61,7 +61,7 @@ export default function SelectFlight() {
   const router = useRouter();
 
   function handleSelect(id: string) {
-    router.push(`/filldetails?flight=${id}`);
+    router.push(`/filldetails?flight=${id}&class=${passenger_class}`);
   }
 
   return (
