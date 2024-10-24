@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
   try {
     const res = await executeQuery(
       "CALL `reservation_flightSearch`(?, ?, ?, ?)",
-      [departure_airport, arrival_airport, departure_date, seat_class.substring(0,8)]
+      [departure_airport, arrival_airport, departure_date, seat_class]
     );
     const  flights : Flight[] = res[0]
     // console.log(flights)
