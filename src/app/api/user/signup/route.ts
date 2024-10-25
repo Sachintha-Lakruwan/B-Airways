@@ -1,5 +1,6 @@
 import { hash } from "bcrypt";
 import { executeQuery } from "../../database/database";
+import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
     const requestBody = await request.json(); // Parse JSON body
@@ -11,13 +12,13 @@ export async function POST(request: Request) {
         typeof password !== "string" ||
         typeof email !== "string"
     ) {
-        return new Response("Invalid form data", { status: 400 });
+        return NextResponse.json({message : "Invalid form data"}, { status: 400 });
     }
 
     const emailPattern = /^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/;
 
     if (!emailPattern.test(email)) {
-        return new Response("Invalid email", { status: 400 });
+        return NextResponse.json({message : "Invalid email"}, { status: 400 });
     }
 
     try {
@@ -27,7 +28,7 @@ export async function POST(request: Request) {
         );
 
         if (existingUser.length > 0) {
-            return new Response("Username already exists", { status: 400 });
+            return NextResponse.json({message : "Username already exists"}, { status: 400 });
         }
         
         const hashed_password = await hash(password, 10);
@@ -38,7 +39,7 @@ export async function POST(request: Request) {
         );
     } catch (error) {
         console.error("Error registering user:", error);
-        return new Response("Something went wrong.", { status: 500 });
+        return NextResponse.json({message : "Something went wrong."}, { status: 500 });
     }
-    return new Response("User registered", { status: 200 });
+    return NextResponse.json({message : "User registered"}, { status: 200 });
 }
