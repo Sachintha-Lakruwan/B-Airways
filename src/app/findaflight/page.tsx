@@ -116,7 +116,7 @@ export default function SelectFlight() {
       ) : (
         <div className=" w-full h-full p-20 pt-28 absolute z-10 flex items-center justify-center">
           <div className=" w-full h-full glass3 rounded-lg row-span-2 flex items-center justify-center flex-col">
-            <p className=" text-5xl font-extrabold tracking-tighter text-sky-900">
+            <p className=" text-5xl font-extrabold text-sky-900">
               No Flights are Available
             </p>
             <Button
