@@ -160,6 +160,7 @@ const FillDetails = () => {
   const handleSubmit = async () => {
     details.seat_number = pickedSeat;
     details.flight = flightId;
+    console.log(details);
     const response = await fetch("/api/booking/reserve", {
       method: "POST",
       headers: {
@@ -169,6 +170,7 @@ const FillDetails = () => {
     });
 
     const result = await response.json();
+    // confirm before the payment
     console.log(result);
   };
 

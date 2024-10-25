@@ -6,7 +6,12 @@ import React from "react";
 import img from "@/public/payment.jpg";
 
 export default function page() {
-  function handleConfirmPayment() {}
+
+
+
+  function handleConfirmPayment() {
+
+  }
   return (
     <div className=" w-full h-screen flex justify-center items-center flex-col">
       <div className=" bg-sky-400 w-full h-full absolute">
