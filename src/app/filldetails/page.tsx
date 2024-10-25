@@ -28,53 +28,53 @@ interface Seat {
 
 type SeatRow = Seat[];
 
-const seats: SeatRow[] = [
-  [
-    { "44A": true },
-    { "44B": false },
-    { "44C": true },
-    { "44D": false },
-    { "44F": true },
-    { "44G": false },
-    { "44H": true },
-  ],
-  [
-    { "45A": true },
-    { "45B": false },
-    { "45C": true },
-    { "45D": false },
-    { "45F": true },
-    { "45G": false },
-    { "45H": true },
-  ],
-  [
-    { "46A": false },
-    { "46B": true },
-    { "46C": false },
-    { "46D": true },
-    { "46F": false },
-    { "46G": true },
-    { "46H": false },
-  ],
-  [
-    { "47A": true },
-    { "47B": false },
-    { "47C": true },
-    { "47D": false },
-    { "47F": true },
-    { "47G": false },
-    { "47H": true },
-  ],
-  [
-    { "48A": false },
-    { "48B": true },
-    { "48C": false },
-    { "48D": true },
-    { "48F": false },
-    { "48G": true },
-    { "48H": false },
-  ],
-];
+// const seats: SeatRow[] = [
+//   [
+//     { "44A": true },
+//     { "44B": false },
+//     { "44C": true },
+//     { "44D": false },
+//     { "44F": true },
+//     { "44G": false },
+//     { "44H": true },
+//   ],
+//   [
+//     { "45A": true },
+//     { "45B": false },
+//     { "45C": true },
+//     { "45D": false },
+//     { "45F": true },
+//     { "45G": false },
+//     { "45H": true },
+//   ],
+//   [
+//     { "46A": false },
+//     { "46B": true },
+//     { "46C": false },
+//     { "46D": true },
+//     { "46F": false },
+//     { "46G": true },
+//     { "46H": false },
+//   ],
+//   [
+//     { "47A": true },
+//     { "47B": false },
+//     { "47C": true },
+//     { "47D": false },
+//     { "47F": true },
+//     { "47G": false },
+//     { "47H": true },
+//   ],
+//   [
+//     { "48A": false },
+//     { "48B": true },
+//     { "48C": false },
+//     { "48D": true },
+//     { "48F": false },
+//     { "48G": true },
+//     { "48H": false },
+//   ],
+// ];
 
 interface Details {
   name: string;
@@ -100,10 +100,29 @@ const details: Details = {
 
 const FillDetails = () => {
   const searchParams = useSearchParams();
-  const flight = searchParams.get("flight");
-  // const passengerClass = searchParams.get("class");
+  const flightId = searchParams.get("flight");
+  const passengerClass = searchParams.get("class");
 
   // funtion to fetch seat details using flight and class
+  const [loadingSeats, setLoadingSeats] = useState(true);
+  const [seats, setSeats] = useState<SeatRow[]>([]);
+
+  const fetchSeats = async () => {
+    try {
+      setLoadingSeats(true);
+      const seatsResponse = await fetch(
+        `/api/booking/seats?seat_class=${passengerClass}&schedule_id=${flightId}`
+      );
+      if (seatsResponse) {
+        const seatsTemp = await seatsResponse.json();
+        setSeats(seatsTemp);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoadingSeats(false);
+    }
+  };
 
   const handleSubmit = async () => {
     const response = await fetch("/api/booking/reserve", {
@@ -125,6 +144,7 @@ const FillDetails = () => {
   function handlePickSeatButton() {
     // check if the all the fields are filled
     setIsPickingSeat(true);
+    fetchSeats();
   }
 
   const router = useRouter();
@@ -134,7 +154,7 @@ const FillDetails = () => {
     if (pickedSeat != "") {
       setPickSeatWarning(false);
       handleSubmit();
-      router.push(`/payment?flight=${flight}&seat=${pickedSeat}`);
+      router.push(`/payment?flight=${flightId}&seat=${pickedSeat}`);
     } else {
       setPickSeatWarning(true);
     }
@@ -142,7 +162,7 @@ const FillDetails = () => {
 
   return (
     <div className=" w-full h-screen flex justify-center items-center flex-col">
-      <div className=" bg-sky-400 w-full h-full absolute">
+      <div className="bg-sky-400 w-full h-full absolute">
         <Image
           src={img}
           fill
@@ -183,6 +203,34 @@ const FillDetails = () => {
             >
               Pick a Seat
             </Button>
+          </div>
+        ) : loadingSeats ? (
+          <div className=" w-full p-6 grid grid-cols-6 gap-6">
+            <div className=" aspect-square h-12 animate-pulse bg-zinc-100 rounded-lg opacity-20"></div>
+            <div className=" aspect-square h-12 animate-pulse bg-zinc-100 rounded-lg opacity-20"></div>
+            <div className=" aspect-square h-12 animate-pulse bg-zinc-100 rounded-lg opacity-20"></div>
+            <div className=" aspect-square h-12 animate-pulse bg-zinc-100 rounded-lg opacity-20"></div>
+            <div className=" aspect-square h-12 animate-pulse bg-zinc-100 rounded-lg opacity-20"></div>
+            <div className=" aspect-square h-12 animate-pulse bg-zinc-100 rounded-lg opacity-20"></div>
+            <div className=" aspect-square h-12 animate-pulse bg-zinc-100 rounded-lg opacity-20"></div>
+            <div className=" aspect-square h-12 animate-pulse bg-zinc-100 rounded-lg opacity-20"></div>
+            <div className=" aspect-square h-12 animate-pulse bg-zinc-100 rounded-lg opacity-20"></div>
+            <div className=" aspect-square h-12 animate-pulse bg-zinc-100 rounded-lg opacity-20"></div>
+            <div className=" aspect-square h-12 animate-pulse bg-zinc-100 rounded-lg opacity-20"></div>
+            <div className=" aspect-square h-12 animate-pulse bg-zinc-100 rounded-lg opacity-20"></div>
+            <div className=" aspect-square h-12 animate-pulse bg-zinc-100 rounded-lg opacity-20"></div>
+            <div className=" aspect-square h-12 animate-pulse bg-zinc-100 rounded-lg opacity-20"></div>
+            <div className=" aspect-square h-12 animate-pulse bg-zinc-100 rounded-lg opacity-20"></div>
+            <div className=" aspect-square h-12 animate-pulse bg-zinc-100 rounded-lg opacity-20"></div>
+            <div className=" aspect-square h-12 animate-pulse bg-zinc-100 rounded-lg opacity-20"></div>
+            <div className=" aspect-square h-12 animate-pulse bg-zinc-100 rounded-lg opacity-20"></div>
+            <div className=" aspect-square h-12 animate-pulse bg-zinc-100 rounded-lg opacity-20"></div>
+            <div className=" aspect-square h-12 animate-pulse bg-zinc-100 rounded-lg opacity-20"></div>
+            <div className=" aspect-square h-12 animate-pulse bg-zinc-100 rounded-lg opacity-20"></div>
+            <div className=" aspect-square h-12 animate-pulse bg-zinc-100 rounded-lg opacity-20"></div>
+            <div className=" aspect-square h-12 animate-pulse bg-zinc-100 rounded-lg opacity-20"></div>
+            <div className=" aspect-square h-12 animate-pulse bg-zinc-100 rounded-lg opacity-20"></div>
+            <div className=" w-full h-12 animate-pulse bg-sky-500 rounded-lg opacity-20 col-span-6"></div>
           </div>
         ) : (
           <div className=" flex flex-col">
