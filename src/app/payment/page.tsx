@@ -4,9 +4,45 @@ import { Button, Input } from "@nextui-org/react";
 import Image from "next/image";
 import React from "react";
 import img from "@/public/payment.jpg";
+import { useSearchParams } from "next/navigation";
 
-export default function page() {
-  function handleConfirmPayment() {}
+interface Details {
+  flight: number;
+  seat_number: string;
+  userId: number | null;
+}
+
+const details: Details = {
+  flight: 1,
+  seat_number: "",
+  userId: null,
+};
+
+export default function Page() {
+  const searchParams = useSearchParams();
+  const flightId = Number(searchParams.get("flight"));
+  const seatNumber = searchParams.get("seat");
+
+  const handleSubmit = async () => {
+    details.flight = flightId;
+    if (seatNumber) {
+      details.seat_number = seatNumber;
+    } else {
+      return;
+    }
+    const response = await fetch("/api/booking/confirm", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(details),
+    });
+    console.log(response);
+  };
+
+  function handleConfirmPayment() {
+    handleSubmit();
+  }
   return (
     <div className=" w-full h-screen flex justify-center items-center flex-col">
       <div className=" bg-sky-400 w-full h-full absolute">
