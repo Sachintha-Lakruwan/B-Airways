@@ -108,6 +108,9 @@ const FillDetails = () => {
   const flightId = Number(searchParams.get("flight"));
   const passengerClass = searchParams.get("class");
 
+  const [error, setError] = useState<boolean>(false);
+  const [successfull, setSuccessfull] = useState<boolean>(false);
+
   const router = useRouter();
 
   if (!flightId || !passengerClass) {
@@ -160,7 +163,6 @@ const FillDetails = () => {
   const handleSubmit = async () => {
     details.seat_number = pickedSeat;
     details.flight = flightId;
-    console.log(details);
     const response = await fetch("/api/booking/reserve", {
       method: "POST",
       headers: {
@@ -169,9 +171,18 @@ const FillDetails = () => {
       body: JSON.stringify(details),
     });
 
-    const result = await response.json();
-    // confirm before the payment
-    console.log(result);
+    if (response.status !== 200) {
+      setError(true);
+      console.log("error");
+      setTimeout(() => {
+        router.push("/");
+      }, 1000);
+    } else {
+      setSuccessfull(true);
+      setTimeout(() => {
+        router.push(`/payment?flight=${flightId}&seat=${pickedSeat}`);
+      }, 1000);
+    }
   };
 
   const [isPickingSeat, setIsPickingSeat] = useState<boolean>(false);
@@ -189,7 +200,6 @@ const FillDetails = () => {
     if (pickedSeat != "") {
       setPickSeatWarning(false);
       handleSubmit();
-      router.push(`/payment?flight=${flightId}&seat=${pickedSeat}`);
     } else {
       setPickSeatWarning(true);
     }
@@ -289,6 +299,16 @@ const FillDetails = () => {
               {pickSeatWarning && (
                 <div className=" absolute mt-1 text-center text-red-800 italic text-sm bottom-0">
                   Please pick a Seat
+                </div>
+              )}
+              {error && (
+                <div className=" absolute mt-1 text-center text-red-800 italic text-sm bottom-0">
+                  Sorry, an error occurred. Redirecting to the homepage...
+                </div>
+              )}
+              {successfull && (
+                <div className=" absolute mt-1 text-center text-green-800 italic text-sm bottom-0">
+                  Redirecting to the payment page...
                 </div>
               )}
             </div>
