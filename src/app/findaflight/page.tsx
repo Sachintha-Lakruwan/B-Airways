@@ -5,6 +5,7 @@ import FlightRaw from "./FlightRaw";
 import img from "@/public/pexels-hson-5071155.jpg";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Button } from "@nextui-org/button";
 
 interface Flight {
   key: number;
@@ -70,7 +71,7 @@ export default function SelectFlight() {
           alt="hero image"
         ></Image>
       </div>
-      {isLoading || !flights[0] ? (
+      {isLoading ? (
         <div className=" w-full h-full p-20 pt-28 absolute z-10 grid grid-rows-7 gap-6">
           <div className=" w-full h-full animate-pulse bg-zinc-100 rounded-lg opacity-20 row-span-2"></div>
           <div className=" w-full h-full animate-pulse bg-sky-500 rounded-lg opacity-20 "></div>
@@ -80,7 +81,7 @@ export default function SelectFlight() {
           <div className=" w-full h-full animate-pulse bg-zinc-100 rounded-lg opacity-20"></div>
           <div className=" w-full h-full animate-pulse bg-zinc-100 rounded-lg opacity-20"></div>
         </div>
-      ) : (
+      ) : flights[0] ? (
         <div className=" w-full h-full p-20 pt-28">
           <div className=" w-full rounded-lg bg-sky-100 drop-shadow-lg mb-3 p-10 glass1">
             <p className=" text-center text-5xl font-extrabold text-sky-900 capitalize tracking-wide">
@@ -110,6 +111,22 @@ export default function SelectFlight() {
                 handleClick={handleSelect}
               />
             ))}
+          </div>
+        </div>
+      ) : (
+        <div className=" w-full h-full p-20 pt-28 absolute z-10 flex items-center justify-center">
+          <div className=" w-full h-full glass3 rounded-lg row-span-2 flex items-center justify-center flex-col">
+            <p className=" text-5xl font-extrabold text-sky-900">
+              No Flights are Available
+            </p>
+            <Button
+              className=" mt-9 h-14 w-48 bg-sky-900"
+              variant="solid"
+              color="primary"
+              onClick={() => router.push("/")}
+            >
+              <p className="🛫 font-bold text-lg">Home</p>
+            </Button>
           </div>
         </div>
       )}

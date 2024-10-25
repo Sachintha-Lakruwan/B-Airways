@@ -160,7 +160,7 @@ const FillDetails = () => {
                 Fill your details
               </h2>
             </div>
-            <Input type="name" label="Name" />
+            <Input type="text" label="Name" placeholder=" " />
             <div className=" flex flex-row gap-3">
               <Input type="" label="Age" />
               <Select label="Gender">
