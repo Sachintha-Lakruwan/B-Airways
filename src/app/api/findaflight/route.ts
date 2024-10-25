@@ -3,7 +3,8 @@ import { executeQuery } from "../database/database";
 
 interface Flight {
   key: string;
-  date: string;
+  date: string; // will concatenate the two date and time fields
+  departure_time : string;
   duration: string;
   departure_airport: string;
   arrival_airport: string;
@@ -36,7 +37,12 @@ export async function GET(request: NextRequest) {
       [departure_airport, arrival_airport, departure_date, seat_class]
     );
     const flights: Flight[] = res[0] as Flight[];
-    // console.log(flights);
+
+    flights.map((flight) => {
+      flight.date = new Date(flight.date).toLocaleDateString('en-CA');
+      flight.date += " " + flight.departure_time;
+    })
+
     return NextResponse.json(flights);
   } catch (err) {
     console.error(err);

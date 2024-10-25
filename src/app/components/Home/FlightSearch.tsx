@@ -101,9 +101,7 @@ export default function FlightSearch() {
   return (
     <div className=" w-full grid grid-cols-6 gap-6 grid-rows-3">
       <div className=" w-full h-20 col-span-6 flex items-center text-sky-950">
-        <p className=" text-5xl font-extrabold tracking-tighter">
-          FLIGHT SEARCH
-        </p>
+        <p className=" text-5xl font-extrabold">FLIGHT SEARCH</p>
       </div>
       {!loading ? (
         <>

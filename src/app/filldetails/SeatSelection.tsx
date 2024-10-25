@@ -28,9 +28,9 @@ export default function SeatSelection({
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full max-h-[50dvh] overflow-scroll">
       {seats.map((row, rowIndex) => (
-        <div key={rowIndex} className="flex space-x-2 mb-4">
+        <div key={rowIndex} className="flex space-x-2 mb-4 justify-center">
           {row.map((seat) => {
             const [seatId, isAvailable] = Object.entries(seat)[0];
             return (
