@@ -56,8 +56,8 @@ export default function NavBar() {
             </Link>
           </div>
           <div className=" flex items-center">
-            <Link href="/">
-              <p>HELP</p>
+            <Link href="/daily">
+              <p>DAILY</p>
             </Link>
           </div>
         </div>
