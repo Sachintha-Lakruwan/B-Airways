@@ -51,7 +51,7 @@ export default function NavBar() {
             </Link>
           </div>
           <div className=" flex items-center">
-            <Link href="/">
+            <Link href="/loyalty">
               <p>LOYALTY</p>
             </Link>
           </div>
