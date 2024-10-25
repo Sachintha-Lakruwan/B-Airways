@@ -28,7 +28,7 @@ export default function SignUpForm() {
 
       const data = await response.json();
 
-      if (data.success) {
+      if (response.ok) {
         console.log("Sign in successfull");
         router.push("/login");
       } else {
