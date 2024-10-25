@@ -33,15 +33,15 @@ export async function POST(request : NextRequest) {
             }
         );
         
-        const response = NextResponse.json({ message: 'Login successful' });
-        response.cookies.set({
-            name: 'sess_token',
-            value: token,
-            httpOnly: true, // HTTP-only cookie
-            secure: process.env.NODE_ENV === 'production', // Secure in production
-            maxAge: 60 * 60, // 1 hour in seconds
-            path: '/',
-        });
+        const response = NextResponse.json({ token: token });
+        // response.cookies.set({
+        //     name: 'sess_token',
+        //     value: token,
+        //     httpOnly: true, // HTTP-only cookie
+        //     secure: process.env.NODE_ENV === 'production', // Secure in production
+        //     maxAge: 60 * 60, // 1 hour in seconds
+        //     path: '/',
+        // });
 
         return response;
     }

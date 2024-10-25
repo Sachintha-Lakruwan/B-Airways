@@ -1,10 +1,11 @@
 'use client'
 
-// Just used for testing api
-
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function SignUpForm() {
+  const router = useRouter();
+
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -26,10 +27,9 @@ export default function SignUpForm() {
       const data = await response.json()
 
       if (data.success) {
-        // Sign-up successful, redirect to login page
         console.log("Sign in successfull");
+        router.push("/login");
       } else {
-        // Sign-up failed, show error message
         setError(data.message || 'Failed to sign up')
       }
     } catch (err) {
@@ -40,7 +40,7 @@ export default function SignUpForm() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-blue-400 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
