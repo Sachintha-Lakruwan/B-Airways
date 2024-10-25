@@ -4,17 +4,25 @@ import React, { useEffect } from "react";
 import logo from "@/public/B Airways.png";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
-import { setToken } from "../GlobalRedux/Slices/auth/authSlice";
+import { checkTokenValidity, logout, setToken } from "../GlobalRedux/Slices/auth/authSlice";
 import { RootState } from "../GlobalRedux/store";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function NavBar() {
   const dispatch = useDispatch();
+  const router = useRouter();
+
+  const handleClick = ()=>{
+    dispatch(logout())
+    router.push("/");
+  }
 
   useEffect(() => {
       const token = localStorage.getItem("token");
       if (token) {
           dispatch(setToken(token)); // Set token in the Redux store
+          dispatch(checkTokenValidity()); // Check if the token is still valid
       }
   }, [dispatch]);
 
@@ -62,11 +70,11 @@ export default function NavBar() {
         ) 
         : 
         (
-        <Link href="/">
+        <button onClick={handleClick}>
           <div>
             <div>LOGOUT</div>
           </div>
-        </Link>
+        </button>
         )
         }
       </div>
