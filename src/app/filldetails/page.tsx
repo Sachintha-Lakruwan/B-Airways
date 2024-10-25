@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import img from "@/public/pexels-hson-5071155.jpg";
 import { Button, Input, Select, SelectItem } from "@nextui-org/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import SeatSelection from "./SeatSelection";
 
@@ -21,6 +21,11 @@ const gendersList = [
     label: "Other",
   },
 ];
+
+interface Country {
+  key: string;
+  label: string;
+}
 
 interface Seat {
   [key: string]: boolean;
@@ -83,7 +88,7 @@ interface Details {
   passportNumber: string;
   nic: string;
   country_code: string;
-  flight: string;
+  flight: number;
   seat_number: string;
 }
 
@@ -93,15 +98,21 @@ const details: Details = {
   gender: "male",
   passportNumber: "A12345623",
   nic: "200034456532",
-  country_code: "Sri Lanka",
-  flight: "3",
+  country_code: "LKA",
+  flight: 3,
   seat_number: "44A",
 };
 
 const FillDetails = () => {
   const searchParams = useSearchParams();
-  const flightId = searchParams.get("flight");
+  const flightId = Number(searchParams.get("flight"));
   const passengerClass = searchParams.get("class");
+
+  const router = useRouter();
+
+  if (!flightId || !passengerClass) {
+    router.push("/");
+  }
 
   // funtion to fetch seat details using flight and class
   const [loadingSeats, setLoadingSeats] = useState(true);
@@ -124,7 +135,31 @@ const FillDetails = () => {
     }
   };
 
+  const [loadingCountries, setLoadingCountries] = useState(true);
+  const [countries, setCountries] = useState<Country[]>([]);
+
+  const fetchCountries = async () => {
+    try {
+      setLoadingCountries(true);
+      const countriesResponse = await fetch(`/api/flightsearch/countries`);
+      if (countriesResponse) {
+        const countriesTemp = await countriesResponse.json();
+        setCountries(countriesTemp);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoadingCountries(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCountries();
+  }, []);
+
   const handleSubmit = async () => {
+    details.seat_number = pickedSeat;
+    details.flight = flightId;
     const response = await fetch("/api/booking/reserve", {
       method: "POST",
       headers: {
@@ -146,8 +181,6 @@ const FillDetails = () => {
     setIsPickingSeat(true);
     fetchSeats();
   }
-
-  const router = useRouter();
 
   function handleConfirmPayment() {
     // send passenger details, booking id, seat number, flight id to the backend
@@ -191,11 +224,15 @@ const FillDetails = () => {
             </div>
             <Input type="email" label="Passport Number" />
             <Input type="email" label="NIC" />
-            <Select label="Gender">
-              {gendersList.map((g) => (
-                <SelectItem key={g.key}>{g.label}</SelectItem>
-              ))}
-            </Select>
+            {loadingCountries ? (
+              <div className=" aspect-square h-14 animate-pulse bg-zinc-100 rounded-xl opacity-20"></div>
+            ) : (
+              <Select label="Country">
+                {countries.map((g) => (
+                  <SelectItem key={g.key}>{g.label}</SelectItem>
+                ))}
+              </Select>
+            )}
             <Button
               className=" bg-sky-900 text-sky-100 p-6"
               variant="solid"
