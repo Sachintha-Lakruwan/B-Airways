@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { setToken } from "../GlobalRedux/Slices/auth/authSlice";
 import { RootState } from "../GlobalRedux/store";
+import Link from "next/link";
 
 export default function NavBar() {
   const dispatch = useDispatch();
@@ -30,21 +31,44 @@ export default function NavBar() {
       <div className=" w-full h-full flex flex-row justify-between items-center text-xl font-bold text-white">
         <div className=" flex flex-row gap-6">
           <div className=" h-20 aspect-square p-2 relative">
-            <Image src={logo} alt="B Airways Logo" fill sizes="100vw"></Image>
+            <Link href="/">
+              <Image src={logo} alt="B Airways Logo" fill sizes="100vw">
+              </Image>
+            </Link>
           </div>
           <div className=" flex items-center">
-            <p>BOOK</p>
+            <Link href="/">
+              <p>BOOK</p>
+            </Link>
           </div>
           <div className=" flex items-center">
-            <p>LOYALTY</p>
+            <Link href="/">
+              <p>LOYALTY</p>
+            </Link>
           </div>
           <div className=" flex items-center">
-            <p>HELP</p>
+            <Link href="/">
+              <p>HELP</p>
+            </Link>
           </div>
         </div>
-        <div>
-          <div>LOGIN</div>
-        </div>
+        {!authState.isAuthenticated ? 
+        (  
+        <Link href="/login">
+          <div>
+            <div>LOGIN</div>
+          </div>
+        </Link>
+        ) 
+        : 
+        (
+        <Link href="/">
+          <div>
+            <div>LOGOUT</div>
+          </div>
+        </Link>
+        )
+        }
       </div>
     </div>
   );

@@ -8,6 +8,8 @@ import { login, setToken } from "../GlobalRedux/Slices/auth/authSlice";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../GlobalRedux/store";
+import Image from "next/image";
+import img from "@/public/pexels-hson-5071155.jpg";
 
 export default function LoginForm() {
     const dispatch = useDispatch<AppDispatch>();
@@ -32,10 +34,21 @@ export default function LoginForm() {
     };
 
     return (
+        <>
+        <div className="bg-sky-400 w-full h-full absolute">
+        <Image
+          src={img}
+          fill
+          sizes="100vw"
+          style={{ objectFit: "cover" }}
+          priority={true}
+          alt="hero image">
+        </Image>
+        </div>
         <div className="min-h-screen flex items-center justify-center bg-blue-400 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-md w-full space-y-8">
                 <div>
-                    <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                    <h2 className="relative z-10 mt-6 text-center text-3xl font-extrabold text-sky-900">
                         Sign in to your account
                     </h2>
                 </div>
@@ -81,22 +94,22 @@ export default function LoginForm() {
                     </div>
 
                     {error && (
-                        <div className="text-red-500 text-sm">{error}</div>
+                        <div className="relative z-10 text-red-800 text-sm">{error}</div>
                     )}
 
                     <div>
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-sky-900 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
                         >
                             {isLoading ? "Signing in..." : "Sign in"}
                         </button>
                     </div>
-                    <div className="text-sm text-center mt-4">
+                    <div className="relative z-10 text-sm text-center mt-4">
                         <Link
                             href="/signup"
-                            className="font-medium text-indigo-600 hover:text-indigo-500"
+                            className="font-medium text-sky-900 hover:text-sky-600"
                         >
                             {"Don't have an account? Sign up"}
                         </Link>
@@ -104,5 +117,6 @@ export default function LoginForm() {
                 </form>
             </div>
         </div>
+    </>
     );
 }
