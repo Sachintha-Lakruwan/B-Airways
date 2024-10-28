@@ -6,7 +6,7 @@ import img from "@/public/pexels-hson-5071155.jpg";
 import FlightRaw from "./FlightRaw";
 import { Button } from "@nextui-org/button";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+// import { motion } from "framer-motion";
 import { Select, SelectItem } from "@nextui-org/select";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../GlobalRedux/store";
@@ -72,7 +72,9 @@ const classesList = [
 const FlightListing: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [flights, setFlights] = useState<Schedule[]>([]);
-  const [chooseClass, setChooseClass] = useState<boolean>(true);
+  const [chooseClass, setChooseClass] = useState<boolean>(false);
+  const [flightID, setFlightID] = useState<string>("");
+  const [classError, setClassError] = useState<boolean>(false);
 
   const fetchFlights = async () => {
     try {
@@ -143,6 +145,9 @@ const FlightListing: React.FC = () => {
           <div className=" max-h-[60%] overflow-scroll hide-scroll text-center">
             {flights.map((flight: Schedule) => (
               <FlightRaw
+                flightID="flight1"
+                setFlightID={setFlightID}
+                setChooseClass={setChooseClass}
                 key={crypto.randomUUID()}
                 id={flight.key}
                 DateTime={flight.departure_time}
@@ -175,7 +180,9 @@ const FlightListing: React.FC = () => {
       {chooseClass && (
         <div className=" absolute top-0 h-screen w-full z-10  flex items-center justify-center glass">
           <div className=" glass3 px-10 py-8 rounded-xl drop-shadow-xl">
-            {/* <p>Please select the class to continue booking</p> */}
+            {/* <p className=" py-2 font-bold">
+              Please select your preferred class to continue booking.
+            </p> */}
             <div className=" w-64 h-20">
               <Select
                 items={classesList}
@@ -201,14 +208,23 @@ const FlightListing: React.FC = () => {
                 className=" w-full h-[calc(100%-1rem)] bg-sky-900"
                 variant="solid"
                 color="primary"
-                // onClick={handleSubmit}
+                onClick={() => {
+                  if (passengerClass == "") {
+                    setClassError(true);
+                  } else {
+                    router.push(
+                      `/filldetails?flight=${flightID}&class=${passengerClass}`
+                    );
+                  }
+                }}
               >
-                <p className="🛫 font-bold text-lg">Search Flights</p>
+                <p className="🛫 font-bold text-lg">Continue Booking</p>
               </Button>
-              {/* {buttonWarning && (
+              {classError && (
                 <div className=" absolute w-full mt-1 text-center text-red-800 italic text-sm">
-                  Please fill all the fields
-                </div> */}
+                  Please select a Class
+                </div>
+              )}
             </div>
           </div>
         </div>
