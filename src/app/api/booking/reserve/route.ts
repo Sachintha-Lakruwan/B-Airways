@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { executeQuery } from "../../database/database";
+import jwt, { } from "jsonwebtoken";
 
 interface Details {
+  token: string | null;
   name: string;
   age: number;
   gender: string;
@@ -10,10 +12,21 @@ interface Details {
   country_code: string;
   flight: string; // schedule_id
   seat_number: string;
+  baggage : number;
 }
 
 export async function POST(request: NextRequest) {
   const reqBody: Details = await request.json();
+  let decoded : { userId : number | null, role : string ,iat : number, exp : number } | null = null;
+  if (reqBody.token !== null) {
+    try {
+      decoded = jwt.verify(reqBody.token, process.env.JWT_SECRET || "your_jwt_secret") as { userId : number, role : string ,iat : number, exp : number };    
+    } catch(err) {
+      console.error(err);
+      return new NextResponse("Error validating token", { status: 401 });
+    }
+  };
+
   console.log(reqBody);
 
   if (
@@ -29,9 +42,9 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    // CALL `reservation_createPendingBooking`('himathbro', '22', 'male', '2222222222', '1111111111', 'ABW', '4', '30A')
+    // CALL `reservation_createPendingBooking`('himathbro', '22', 'male', '2222222222', '1111111111', 'ABW', '4', '30A', 24 kgggggg)
     await executeQuery(
-      "CALL `reservation_createPendingBooking`(? , ? , ? , ? , ? , ? , ?, ?);",
+      "CALL `reservation_createPendingBooking`(? , ? , ? , ? , ? , ? , ?, ?, ? );",
       [
         reqBody.name,
         reqBody.age,
@@ -41,8 +54,12 @@ export async function POST(request: NextRequest) {
         reqBody.country_code,
         reqBody.flight,
         reqBody.seat_number,
+        reqBody.baggage,
       ]
     );
+    // console.log("user token is : ", decoded ? decoded.userId : null);
+  const price_details = await executeQuery("CALL `reservation_priceTally`(?, ?, ?, ?)", [reqBody.flight,reqBody.seat_number, decoded ? decoded.userId : null, reqBody.baggage]);
+    console.log(price_details[0][0]);
   } catch (err) {
     console.error(err);
     return new NextResponse("Error executing query", { status: 500 });
