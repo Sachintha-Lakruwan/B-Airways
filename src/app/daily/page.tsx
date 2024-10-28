@@ -6,6 +6,14 @@ import img from "@/public/pexels-hson-5071155.jpg";
 import FlightRaw from "./FlightRaw";
 import { Button } from "@nextui-org/button";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import { Select, SelectItem } from "@nextui-org/select";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../GlobalRedux/store";
+import {
+  checkFirstStage,
+  setPassengerClass,
+} from "../GlobalRedux/Slices/FlightDetails/flight";
 
 interface Schedule {
   key: number;
@@ -18,6 +26,12 @@ interface Schedule {
   departure_country: string;
   arrival_country: string;
 }
+
+const classesList = [
+  { key: "economy", label: "Economy" },
+  { key: "business", label: "Business" },
+  { key: "platinum", label: "Platinum" },
+];
 
 // const flights: Schedule[] = [
 //     {
@@ -58,6 +72,7 @@ interface Schedule {
 const FlightListing: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [flights, setFlights] = useState<Schedule[]>([]);
+  const [chooseClass, setChooseClass] = useState<boolean>(true);
 
   const fetchFlights = async () => {
     try {
@@ -81,6 +96,10 @@ const FlightListing: React.FC = () => {
   }, []);
 
   const router = useRouter();
+  const dispatch = useDispatch();
+  const passengerClass = useSelector(
+    (state: RootState) => state.flight.passengerClass
+  );
 
   return (
     <div className=" w-full h-screen">
@@ -150,6 +169,47 @@ const FlightListing: React.FC = () => {
             >
               <p className="🛫 font-bold text-lg">Home</p>
             </Button>
+          </div>
+        </div>
+      )}
+      {chooseClass && (
+        <div className=" absolute top-0 h-screen w-full z-10  flex items-center justify-center glass">
+          <div className=" glass3 px-10 py-8 rounded-xl drop-shadow-xl">
+            {/* <p>Please select the class to continue booking</p> */}
+            <div className=" w-64 h-20">
+              <Select
+                items={classesList}
+                label={
+                  <p className="🛫 font-bold text-lg text-zinc-900">Class</p>
+                }
+                placeholder="Select an option"
+                size="lg"
+                variant="underlined"
+                className=" w-full h-full"
+                onChange={(e) => {
+                  dispatch(setPassengerClass(e.target.value));
+                  dispatch(checkFirstStage());
+                }}
+              >
+                {classesList.map((i) => (
+                  <SelectItem key={i.key}>{i.label}</SelectItem>
+                ))}
+              </Select>
+            </div>
+            <div className=" w-full h-20 relative">
+              <Button
+                className=" w-full h-[calc(100%-1rem)] bg-sky-900"
+                variant="solid"
+                color="primary"
+                // onClick={handleSubmit}
+              >
+                <p className="🛫 font-bold text-lg">Search Flights</p>
+              </Button>
+              {/* {buttonWarning && (
+                <div className=" absolute w-full mt-1 text-center text-red-800 italic text-sm">
+                  Please fill all the fields
+                </div> */}
+            </div>
           </div>
         </div>
       )}
