@@ -1,22 +1,22 @@
-"use client"
+"use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import img from "@/public/pexels-hson-5071155.jpg";
-import FlightRaw from './FlightRaw';
-import { Button } from '@nextui-org/button';
-import { useRouter } from 'next/navigation';
+import FlightRaw from "./FlightRaw";
+import { Button } from "@nextui-org/button";
+import { useRouter } from "next/navigation";
 
 interface Schedule {
-    key: number;
-    date: string;
-    departure_time: string;
-    duration: string;
-    departure_airport: string;
-    arrival_airport: string;
-    model: string;
-    departure_country: string;
-    arrival_country: string;
+  key: number;
+  date: string;
+  departure_time: string;
+  duration: string;
+  departure_airport: string;
+  arrival_airport: string;
+  model: string;
+  departure_country: string;
+  arrival_country: string;
 }
 
 // const flights: Schedule[] = [
@@ -61,31 +61,29 @@ const FlightListing: React.FC = () => {
 
   const fetchFlights = async () => {
     try {
-        setIsLoading(true);
+      setIsLoading(true);
 
-        const flightsResponse = await fetch(
-            `/api/flightsearch/daily`
-        );
-        if (flightsResponse) {
-            const countriesTemp = await flightsResponse.json();
-            setFlights(countriesTemp);
-        }
-        } catch (error) {
-        console.log(error);
-        } finally {
-        setIsLoading(false);
-        console.log(flights);
-        }
-    };
+      const flightsResponse = await fetch(`/api/flightsearch/daily`);
+      if (flightsResponse) {
+        const countriesTemp = await flightsResponse.json();
+        setFlights(countriesTemp);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+      console.log(flights);
+    }
+  };
 
-    useEffect(() => {
-        fetchFlights();
-    }, []);
+  useEffect(() => {
+    fetchFlights();
+  }, []);
 
-    const router = useRouter();
+  const router = useRouter();
 
-    return (
-        <div className=" w-full h-screen">
+  return (
+    <div className=" w-full h-screen">
       <div className=" bg-sky-400 w-full h-full absolute">
         <Image
           src={img}
@@ -110,7 +108,7 @@ const FlightListing: React.FC = () => {
         <div className=" w-full h-full p-20 pt-28">
           <div className=" w-full rounded-lg bg-sky-100 drop-shadow-lg mb-3 p-10 glass1">
             <p className=" text-center text-5xl font-extrabold text-sky-900 capitalize tracking-wide">
-                Schedule For Today
+              Schedule For Today
             </p>
             <p className=" text-center  tracking-tighter text-sky-900 capitalize mt-2">
               {`${flights[0].date.slice(0, 10)}`}
@@ -123,7 +121,7 @@ const FlightListing: React.FC = () => {
             <div>Arrival Airport</div>
             <div>Model</div>
           </div>
-          <div className=" max-h-[70%] overflow-scroll hide-scroll text-center">
+          <div className=" max-h-[60%] overflow-scroll hide-scroll text-center">
             {flights.map((flight: Schedule) => (
               <FlightRaw
                 key={crypto.randomUUID()}
@@ -156,7 +154,7 @@ const FlightListing: React.FC = () => {
         </div>
       )}
     </div>
-    );
+  );
 };
 
 export default FlightListing;
