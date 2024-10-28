@@ -6,6 +6,8 @@ import { Button, Input, Select, SelectItem } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import SeatSelection from "./SeatSelection";
+import { useSelector } from "react-redux";
+import { RootState } from "../GlobalRedux/store";
 
 const gendersList = [
   {
@@ -82,6 +84,7 @@ type SeatRow = Seat[];
 // ];
 
 interface Details {
+  userID: number | null;
   name: string;
   age: number;
   gender: string;
@@ -90,9 +93,11 @@ interface Details {
   country_code: string;
   flight: number;
   seat_number: string;
+  baggage: number;
 }
 
 const details: Details = {
+  userID: null,
   name: "Kavindu",
   age: 18,
   gender: "male",
@@ -101,9 +106,14 @@ const details: Details = {
   country_code: "LKA",
   flight: 3,
   seat_number: "44A",
+  baggage: 40,
 };
 
 const FillDetails = () => {
+  const user = useSelector((state: RootState) => state.auth.user);
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
   const searchParams = useSearchParams();
   const flightId = Number(searchParams.get("flight"));
   const passengerClass = searchParams.get("class");
@@ -163,6 +173,9 @@ const FillDetails = () => {
   const handleSubmit = async () => {
     details.seat_number = pickedSeat;
     details.flight = flightId;
+    if (isAuthenticated && user) {
+      details.userID = user?.userId;
+    }
     const response = await fetch("/api/booking/reserve", {
       method: "POST",
       headers: {
