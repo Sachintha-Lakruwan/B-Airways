@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { executeQuery } from "../../database/database";
+import { encodeFlightInfo } from "../search/util";
 import jwt from "jsonwebtoken";
 
 export async function POST(request: NextRequest) {
@@ -40,10 +41,14 @@ export async function POST(request: NextRequest) {
             reqBody.flight,
             reqBody.seat_number,
         ]);
+
+        
     } catch (err) {
         console.error(err);
         return new NextResponse("Error executing query", { status: 500 });
     }
 
-    return NextResponse.json({});
+    return NextResponse.json({
+        reference : encodeFlightInfo(reqBody.flight, reqBody.seat_number)
+    });
 }
