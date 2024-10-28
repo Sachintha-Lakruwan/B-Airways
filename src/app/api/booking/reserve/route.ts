@@ -16,9 +16,11 @@ interface Details {
 }
 
 interface PriceDetails {
-  price : number;
-  tax : number;
-  total : number;
+  flight_cost: number,
+  baggage_cost: number,
+  discount_percentage: number,
+  discount_cost: number,
+  total_cost: number
 }
 
 export async function POST(request: NextRequest) {
