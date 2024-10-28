@@ -34,7 +34,7 @@ export default function Page() {
   const seatNumber = searchParams.get("seat");
   const [error, setError] = useState<boolean>(false);
   const [isSuccessful, setSuccessful] = useState<boolean>(false);
-  const [reference, setReference] = useState<string>("H458S23J56G");
+  const [reference, setReference] = useState<string>("");
   const [clipBoardEnable, setClipBoardEnable] = useState<boolean>(true);
 
   const router = useRouter();
@@ -63,6 +63,7 @@ export default function Page() {
         router.push("/");
       }, 1000);
     } else {
+      setReference("H5HJD83TJG2");
       setSuccessful(true);
     }
   };
