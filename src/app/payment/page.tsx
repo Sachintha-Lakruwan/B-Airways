@@ -5,26 +5,35 @@ import Image from "next/image";
 import React from "react";
 import img from "@/public/payment.jpg";
 import { useSearchParams } from "next/navigation";
+import { useSelector } from "react-redux";
+import { RootState } from "../GlobalRedux/store";
 
 interface Details {
   flight: number;
   seat_number: string;
-  userId: number | null;
+  token: string | null;
 }
 
 const details: Details = {
   flight: 1,
   seat_number: "",
-  userId: null,
+  token: null,
 };
 
 export default function Page() {
+  const userToken = useSelector((state: RootState) => state.auth.token);
+  const isAutheticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
   const searchParams = useSearchParams();
   const flightId = Number(searchParams.get("flight"));
   const seatNumber = searchParams.get("seat");
 
   const handleSubmit = async () => {
     details.flight = flightId;
+    if (isAutheticated && userToken) {
+      details.token = userToken;
+    }
     if (seatNumber) {
       details.seat_number = seatNumber;
     } else {
