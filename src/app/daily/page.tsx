@@ -14,6 +14,7 @@ import {
   checkFirstStage,
   setPassengerClass,
 } from "../GlobalRedux/Slices/FlightDetails/flight";
+import { motion } from "framer-motion";
 
 interface Schedule {
   key: number;
@@ -79,7 +80,6 @@ const FlightListing: React.FC = () => {
   const fetchFlights = async () => {
     try {
       setIsLoading(true);
-
       const flightsResponse = await fetch(`/api/flightsearch/daily`);
       if (flightsResponse) {
         const countriesTemp = await flightsResponse.json();
@@ -145,7 +145,7 @@ const FlightListing: React.FC = () => {
           <div className=" max-h-[60%] overflow-scroll hide-scroll text-center">
             {flights.map((flight: Schedule) => (
               <FlightRaw
-                flightID="flight1"
+                flightID="3"
                 setFlightID={setFlightID}
                 setChooseClass={setChooseClass}
                 key={crypto.randomUUID()}
@@ -179,7 +179,11 @@ const FlightListing: React.FC = () => {
       )}
       {chooseClass && (
         <div className=" absolute top-0 h-screen w-full z-10  flex items-center justify-center glass">
-          <div className=" glass3 px-10 py-8 rounded-xl drop-shadow-xl">
+          <motion.div
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ opacity: 100, scale: 1 }}
+            className=" glass3 px-10 py-8 rounded-xl drop-shadow-xl"
+          >
             {/* <p className=" py-2 font-bold">
               Please select your preferred class to continue booking.
             </p> */}
@@ -226,7 +230,7 @@ const FlightListing: React.FC = () => {
                 </div>
               )}
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
     </div>
