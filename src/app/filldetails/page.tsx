@@ -84,7 +84,7 @@ type SeatRow = Seat[];
 // ];
 
 interface Details {
-  userID: number | null;
+  token: string | null;
   name: string;
   age: number;
   gender: string;
@@ -97,7 +97,7 @@ interface Details {
 }
 
 const details: Details = {
-  userID: null,
+  token: null,
   name: "Kavindu",
   age: 18,
   gender: "male",
@@ -110,7 +110,7 @@ const details: Details = {
 };
 
 const FillDetails = () => {
-  const user = useSelector((state: RootState) => state.auth.user);
+  const userToken = useSelector((state: RootState) => state.auth.token);
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   );
@@ -173,8 +173,8 @@ const FillDetails = () => {
   const handleSubmit = async () => {
     details.seat_number = pickedSeat;
     details.flight = flightId;
-    if (isAuthenticated && user) {
-      details.userID = user?.userId;
+    if (isAuthenticated && userToken) {
+      details.token = userToken;
     }
     const response = await fetch("/api/booking/reserve", {
       method: "POST",
