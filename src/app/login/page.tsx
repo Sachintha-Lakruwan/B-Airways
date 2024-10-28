@@ -17,6 +17,7 @@ export default function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -24,7 +25,7 @@ export default function LoginForm() {
     setIsLoading(true);
     const resultAction = await dispatch(login({ username, password }));
     if (login.fulfilled.match(resultAction)) {
-      console.log("login success");
+      setSuccess("Login success");
       dispatch(setToken(resultAction.payload as string));
       router.push("/");
     } else if (login.rejected.match(resultAction)) {
@@ -95,6 +96,10 @@ export default function LoginForm() {
 
             {error && (
               <div className="relative z-10 text-red-800 text-sm">{error}</div>
+            )}
+
+            {success && (
+              <div className="relative z-10 text-green-800 text-sm">{success}</div>
             )}
 
             <div>

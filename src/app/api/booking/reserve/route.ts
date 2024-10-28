@@ -15,6 +15,12 @@ interface Details {
   baggage : number;
 }
 
+interface PriceDetails {
+  price : number;
+  tax : number;
+  total : number;
+}
+
 export async function POST(request: NextRequest) {
   const reqBody: Details = await request.json();
   let decoded : { userId : number | null, role : string ,iat : number, exp : number } | null = null;
@@ -44,7 +50,7 @@ export async function POST(request: NextRequest) {
   try {
     // CALL `reservation_createPendingBooking`('himathbro', '22', 'male', '2222222222', '1111111111', 'ABW', '4', '30A', 24 kgggggg)
     await executeQuery(
-      "CALL `reservation_createPendingBooking`(? , ? , ? , ? , ? , ? , ?, ?, ? );",
+      "CALL `reservation_createPendingBooking`(? , ? , ? , ? , ? , ? , ?, ?, ?);",
       [
         reqBody.name,
         reqBody.age,
@@ -58,12 +64,14 @@ export async function POST(request: NextRequest) {
       ]
     );
     // console.log("user token is : ", decoded ? decoded.userId : null);
-  const price_details = await executeQuery("CALL `reservation_priceTally`(?, ?, ?, ?)", [reqBody.flight,reqBody.seat_number, decoded ? decoded.userId : null, reqBody.baggage]);
-    console.log(price_details[0][0]);
+    const price_details = await executeQuery("CALL `reservation_priceTally`(?, ?, ?, ?)", [reqBody.flight,reqBody.seat_number, decoded ? decoded.userId : null, reqBody.baggage]) as PriceDetails[][];
+    
+    // console.log("Price Details are : ",price_details[0][0])
+
+    return NextResponse.json(price_details[0][0], { status: 200 });
+
   } catch (err) {
     console.error(err);
     return new NextResponse("Error executing query", { status: 500 });
   }
-
-  return NextResponse.json({});
 }
