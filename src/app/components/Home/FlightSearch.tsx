@@ -154,24 +154,6 @@ export default function FlightSearch() {
             </div>
           </div>
           <div className=" w-full h-20 col-span-2">
-            <Select
-              items={baggageList}
-              label={<p className="font-bold text-lg text-zinc-900">Baggage</p>}
-              placeholder="Select Passengers"
-              size="lg"
-              variant="underlined"
-              className=" w-full h-full"
-              onChange={(e) => {
-                dispatch(setBaggageRange(e.target.value));
-                dispatch(checkFirstStage());
-              }}
-            >
-              {baggageList.map((num) => (
-                <SelectItem key={num.key}>{num.label}</SelectItem>
-              ))}
-            </Select>
-          </div>
-          <div className=" w-full h-20 col-span-2">
             <DatePicker
               label="Departing"
               className="w-full text-zinc-900 font-bold text-lg"
@@ -203,6 +185,29 @@ export default function FlightSearch() {
             >
               {classesList.map((i) => (
                 <SelectItem key={i.key}>{i.label}</SelectItem>
+              ))}
+            </Select>
+          </div>
+
+          <div className=" w-full h-20 col-span-2">
+            <Select
+              items={baggageList}
+              label={
+                <p className="font-bold text-lg text-zinc-900">
+                  Search flight for next..
+                </p>
+              }
+              placeholder="Select an option"
+              size="lg"
+              variant="underlined"
+              className=" w-full h-full"
+              onChange={(e) => {
+                dispatch(setBaggageRange(e.target.value));
+                dispatch(checkFirstStage());
+              }}
+            >
+              {baggageList.map((num) => (
+                <SelectItem key={num.key}>{num.label}</SelectItem>
               ))}
             </Select>
           </div>
