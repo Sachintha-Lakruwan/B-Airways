@@ -6,8 +6,9 @@ import { Button, Input, Select, SelectItem } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import SeatSelection from "./SeatSelection";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../GlobalRedux/store";
+import { setPaymentDetails } from "../GlobalRedux/Slices/FlightDetails/flight";
 
 const gendersList = [
   {
@@ -114,6 +115,7 @@ const FillDetails = () => {
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   );
+  const dispatch = useDispatch();
   const searchParams = useSearchParams();
   const flightId = Number(searchParams.get("flight"));
   const passengerClass = searchParams.get("class");
@@ -191,6 +193,10 @@ const FillDetails = () => {
         router.push("/");
       }, 1000);
     } else {
+      if (response) {
+        const priceTemp = await response.json();
+        dispatch(setPaymentDetails(priceTemp));
+      }
       setSuccessfull(true);
       setTimeout(() => {
         router.push(`/payment?flight=${flightId}&seat=${pickedSeat}`);

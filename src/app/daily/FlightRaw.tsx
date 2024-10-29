@@ -30,7 +30,7 @@ export default function FlightRaw({
         setFlightID(flightID);
         setChooseClass(true);
       }}
-      className=" w-full h-14 rounded-lg bg-sky-100 drop-shadow-lg mb-3 grid grid-cols-5 px-8 items-center text-sky-900 font-semibold glass3 cursor-pointer "
+      className=" w-full h-14 rounded-lg bg-sky-100 drop-shadow-lg mb-3 grid grid-cols-5 px-8 items-center text-sky-900 font-semibold glass3 cursor-pointer  transition ease-in-out duration-300 hover:bg-green-400"
     >
       {/* <div>{DateTime.slice(0, 10)}</div> */}
       <div>{DateTime}</div>

@@ -1,16 +1,17 @@
 "use client";
 
-import { Button, Input } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import Image from "next/image";
 import React, { useState } from "react";
-import img from "@/public/payment.jpg";
+// import img from "@/public/pexels-punttim-175656.jpg";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../GlobalRedux/store";
 import check from "@/public/check.png";
 import { motion } from "framer-motion";
 import { FaClipboard } from "react-icons/fa";
 import { FaClipboardCheck } from "react-icons/fa";
+import { setPaymentDetails } from "../GlobalRedux/Slices/FlightDetails/flight";
 
 interface Details {
   flight: number;
@@ -25,6 +26,11 @@ const details: Details = {
 };
 
 export default function Page() {
+  const dispatch = useDispatch();
+  const paymentDetails = useSelector(
+    (state: RootState) => state.flight.paymentDetails
+  );
+
   const userToken = useSelector((state: RootState) => state.auth.token);
   const isAutheticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
@@ -38,6 +44,10 @@ export default function Page() {
   const [clipBoardEnable, setClipBoardEnable] = useState<boolean>(true);
 
   const router = useRouter();
+
+  if (!paymentDetails) {
+    router.push("/");
+  }
 
   const handleSubmit = async () => {
     details.flight = flightId;
@@ -74,8 +84,8 @@ export default function Page() {
     handleSubmit();
   }
   return (
-    <div className=" w-full h-screen flex justify-center items-center flex-col">
-      <div className=" bg-sky-400 w-full h-full absolute">
+    <div className=" w-full h-screen flex justify-center items-center flex-col bg-zinc-100">
+      {/* <div className=" bg-sky-400 w-full h-full absolute">
         <Image
           src={img}
           fill
@@ -84,20 +94,40 @@ export default function Page() {
           priority={true}
           alt="hero image"
         ></Image>
-      </div>
-      <div className=" w-full max-w-96 p-6 glass3 mt-10 rounded-2xl mb-3 flex flex-col gap-6">
+      </div> */}
+      <div className=" w-full max-w-96 p-6 glass3 mt-10 rounded-2xl mb-3 flex flex-col gap-6 bg-white">
         <div>
-          <h2 className=" text-xl font-bold text-center text-sky-900">
-            Enter the OTP to Confirm the Payment
+          <h2 className=" text-2xl font-bold text-center text-sky-900">
+            Confirm the Payment
           </h2>
-          <p className=" text-center text-sm italic text-green-700">
-            OTP: 23546
-          </p>
         </div>
-        <Input type="name" label="OTP" />
+        <div className=" grid grid-cols-[2fr_1fr] font-bold gap-1 text-zinc-700">
+          <div className=" text-zinc-400 ml-3">Flight Cost</div>
+          <div className=" text-right mr-3">
+            {paymentDetails?.flight_cost.toFixed(2)} $
+          </div>
+          <div className=" text-zinc-400 ml-3">Baggage Cost Cost</div>
+          <div className=" text-right mr-3">
+            {paymentDetails?.baggage_cost.toFixed(2)} $
+          </div>
+          <div className=" text-zinc-400 ml-3">Discount Percentage</div>
+          <div className=" text-right mr-3">
+            {paymentDetails?.discount_percentage}
+          </div>
+          <div className=" text-zinc-400 ml-3">Discount Cost</div>
+          <div className=" text-right mr-3">
+            {paymentDetails?.discount_cost.toFixed(2)} $
+          </div>
+          <div className=" w-full col-span-2 grid grid-cols-[2fr_1fr] bg-green-100 p-3 rounded-xl">
+            <div>Total Cost</div>
+            <div className=" text-right">
+              {paymentDetails?.total_cost.toFixed(2)} $
+            </div>
+          </div>
+        </div>
         <div className=" flex flex-col items-center">
           <Button
-            className=" bg-sky-900 text-sky-100 p-6 w-full"
+            className=" bg-sky-900 text-sky-100 p-6 w-full text-md font-bold"
             variant="solid"
             onClick={handleConfirmPayment}
           >
@@ -108,6 +138,15 @@ export default function Page() {
               Something went wrong! Please try again later..
             </div>
           )}
+          <Button
+            className=" bg-zinc-200 text-zinc-700 p-6 w-full text-md font-bold mt-4"
+            variant="solid"
+            onClick={() => {
+              router.push("/");
+            }}
+          >
+            Cancel
+          </Button>
         </div>
       </div>
       {isSuccessful && (
@@ -153,7 +192,10 @@ export default function Page() {
             className="h-14 w-48 bg-sky-100 drop-shadow-2xl opacity-75 rounded-full"
             variant="solid"
             color="primary"
-            onClick={() => router.push("/")}
+            onClick={() => {
+              dispatch(setPaymentDetails(null));
+              router.push("/");
+            }}
           >
             <p className="font-bold text-lg text-sky-900">Home</p>
           </Button>
