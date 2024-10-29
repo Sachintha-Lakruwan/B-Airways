@@ -75,7 +75,7 @@ export default function Loyalty() {
       </div>
       <div className=" mt-[8%] absolute h-[80%] w-full flex items-center justify-center">
         <div className=" h-full aspect-square glass3 rounded-2xl p-8">
-          <h1 className=" text-center mb-6 text-xl font-bold text-sky-900 tracking-wide">
+          <h1 className=" text-center mb-6 text-2xl capitalize font-bold text-sky-900 tracking-wide">
             Find your booking details
           </h1>
           <form
@@ -95,7 +95,7 @@ export default function Loyalty() {
               Search
             </Button>
           </form>
-          <div className=" w-full h-[calc(100%-7rem)] bg-white rounded-2xl mt-6  flex items-center justify-center">
+          <div className=" w-full h-[calc(100%-7.5rem)] bg-white rounded-2xl mt-6  flex items-center justify-center">
             {loading ? (
               <Loading />
             ) : bookingInfo ? (
