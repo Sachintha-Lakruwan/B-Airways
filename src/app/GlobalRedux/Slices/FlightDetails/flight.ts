@@ -2,6 +2,14 @@
 
 import { createSlice } from "@reduxjs/toolkit";
 
+interface PayementDetails {
+  baggage_cost: number;
+  discount_cost: number;
+  discount_percentage: number;
+  flight_cost: number;
+  total_cost: number;
+}
+
 export interface FlightState {
   departureAirport: string;
   arrivalAirport: string;
@@ -9,6 +17,7 @@ export interface FlightState {
   baggageRange: number;
   passengerClass: string;
   isStageOneCompleted: boolean;
+  paymentDetails: PayementDetails | null;
 }
 
 const initialState: FlightState = {
@@ -18,6 +27,7 @@ const initialState: FlightState = {
   baggageRange: 0,
   passengerClass: "",
   isStageOneCompleted: false,
+  paymentDetails: null,
 };
 
 export const flightSlice = createSlice({
@@ -52,6 +62,9 @@ export const flightSlice = createSlice({
     setPassengerClass: (state, action) => {
       state.passengerClass = action.payload;
     },
+    setPaymentDetails: (state, action) => {
+      state.paymentDetails = action.payload;
+    },
   },
 });
 
@@ -62,6 +75,7 @@ export const {
   setPassengerClass,
   setBaggageRange,
   checkFirstStage,
+  setPaymentDetails,
 } = flightSlice.actions;
 
 export default flightSlice.reducer;

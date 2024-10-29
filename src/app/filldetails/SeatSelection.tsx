@@ -21,9 +21,6 @@ export default function SeatSelection({
     if (isAvailable) {
       setPickedSeat(seatId);
       console.log(seatId);
-    } else {
-      alert(`Seat ${seatId} is not available!`);
-      console.log("amarui");
     }
   };
 
@@ -35,7 +32,7 @@ export default function SeatSelection({
             const [seatId, isAvailable] = Object.entries(seat)[0];
             return (
               <button
-                key={seatId}
+                key={crypto.randomUUID()}
                 onClick={() => handleSeatClick(seatId, isAvailable)}
                 className={`px-4 py-2 border rounded cursor-pointer font-bold ${
                   isAvailable
@@ -43,7 +40,7 @@ export default function SeatSelection({
                     : "bg-red-400 text-sky-50"
                 } ${
                   pickedSeat == seatId
-                    ? "bg-sky-900 text-red-500 scale-110"
+                    ? "bg-sky-900 text-sky-100 scale-110"
                     : " "
                 }`}
                 disabled={!isAvailable}

@@ -24,7 +24,7 @@ export default function Hero() {
           Beyond your expectations
         </p>
       </div>
-      <div className=" glass w-[calc(100%-10rem)] p-8 rounded-2xl absolute z-10 top-[50%]">
+      <div className=" glass w-[calc(100%-10rem)] p-8 rounded-2xl absolute z-10 bottom-[5%]">
         <FlightSearch />
       </div>
     </div>

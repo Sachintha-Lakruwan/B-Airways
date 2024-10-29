@@ -2,12 +2,15 @@
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import img from "@/public/pexels-hson-5071155.jpg";
-import { Button, Input, Select, SelectItem } from "@nextui-org/react";
+import { Button, Select, SelectItem } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import SeatSelection from "./SeatSelection";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../GlobalRedux/store";
+import { setPaymentDetails } from "../GlobalRedux/Slices/FlightDetails/flight";
+import CustomNumberInput from "./CustomNumberInput";
+import CustomStringInput from "./CustomStringInput";
 
 const gendersList = [
   {
@@ -35,54 +38,6 @@ interface Seat {
 
 type SeatRow = Seat[];
 
-// const seats: SeatRow[] = [
-//   [
-//     { "44A": true },
-//     { "44B": false },
-//     { "44C": true },
-//     { "44D": false },
-//     { "44F": true },
-//     { "44G": false },
-//     { "44H": true },
-//   ],
-//   [
-//     { "45A": true },
-//     { "45B": false },
-//     { "45C": true },
-//     { "45D": false },
-//     { "45F": true },
-//     { "45G": false },
-//     { "45H": true },
-//   ],
-//   [
-//     { "46A": false },
-//     { "46B": true },
-//     { "46C": false },
-//     { "46D": true },
-//     { "46F": false },
-//     { "46G": true },
-//     { "46H": false },
-//   ],
-//   [
-//     { "47A": true },
-//     { "47B": false },
-//     { "47C": true },
-//     { "47D": false },
-//     { "47F": true },
-//     { "47G": false },
-//     { "47H": true },
-//   ],
-//   [
-//     { "48A": false },
-//     { "48B": true },
-//     { "48C": false },
-//     { "48D": true },
-//     { "48F": false },
-//     { "48G": true },
-//     { "48H": false },
-//   ],
-// ];
-
 interface Details {
   token: string | null;
   name: string;
@@ -98,22 +53,32 @@ interface Details {
 
 const details: Details = {
   token: null,
-  name: "Kavindu",
-  age: 18,
-  gender: "male",
-  passportNumber: "A12345623",
-  nic: "200034456532",
-  country_code: "LKA",
-  flight: 3,
-  seat_number: "44A",
-  baggage: 40,
+  name: "",
+  age: 0,
+  gender: "",
+  passportNumber: "",
+  nic: "",
+  country_code: "",
+  flight: 0,
+  seat_number: "",
+  baggage: 0,
 };
 
 const FillDetails = () => {
+  const [fullName, setFullName] = useState<string>("");
+  const [age, setAge] = useState<number>(0);
+  const [gender, setGender] = useState<string>("");
+  const [passportNumber, setPassportNumber] = useState<string>("");
+  const [nicNumber, setNicNumber] = useState<string>("");
+  const [country, setCountry] = useState<string>("");
+  const [baggage, setBaggage] = useState<number>(0);
+  const [detailsWarning, setDetailsWarning] = useState<boolean>(false);
+
   const userToken = useSelector((state: RootState) => state.auth.token);
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   );
+  const dispatch = useDispatch();
   const searchParams = useSearchParams();
   const flightId = Number(searchParams.get("flight"));
   const passengerClass = searchParams.get("class");
@@ -127,7 +92,6 @@ const FillDetails = () => {
     router.push("/");
   }
 
-  // funtion to fetch seat details using flight and class
   const [loadingSeats, setLoadingSeats] = useState(true);
   const [seats, setSeats] = useState<SeatRow[]>([]);
 
@@ -172,10 +136,7 @@ const FillDetails = () => {
 
   const handleSubmit = async () => {
     details.seat_number = pickedSeat;
-    details.flight = flightId;
-    if (isAuthenticated && userToken) {
-      details.token = userToken;
-    }
+
     const response = await fetch("/api/booking/reserve", {
       method: "POST",
       headers: {
@@ -191,6 +152,10 @@ const FillDetails = () => {
         router.push("/");
       }, 1000);
     } else {
+      if (response) {
+        const priceTemp = await response.json();
+        dispatch(setPaymentDetails(priceTemp));
+      }
       setSuccessfull(true);
       setTimeout(() => {
         router.push(`/payment?flight=${flightId}&seat=${pickedSeat}`);
@@ -203,7 +168,32 @@ const FillDetails = () => {
   const [pickSeatWarning, setPickSeatWarning] = useState<boolean>(false);
 
   function handlePickSeatButton() {
-    // check if the all the fields are filled
+    details.flight = flightId;
+
+    details.name = fullName;
+    details.age = age;
+    details.baggage = baggage;
+    details.country_code = country;
+    details.gender = gender;
+    details.nic = nicNumber;
+    details.passportNumber = passportNumber;
+
+    if (isAuthenticated && userToken) {
+      details.token = userToken;
+    }
+
+    if (
+      details.name == "" ||
+      details.age == 0 ||
+      details.gender == "" ||
+      details.passportNumber == "" ||
+      details.nic == "" ||
+      details.country_code == "" ||
+      details.baggage == 0
+    ) {
+      setDetailsWarning(true);
+      return;
+    }
     setIsPickingSeat(true);
     fetchSeats();
   }
@@ -238,26 +228,54 @@ const FillDetails = () => {
                 Fill your details
               </h2>
             </div>
-            <Input type="text" label="Name" placeholder=" " />
+            <CustomStringInput
+              label="Full Name"
+              value={fullName}
+              setValue={setFullName}
+            />
+
             <div className=" flex flex-row gap-3">
-              <Input type="" label="Age" />
-              <Select label="Gender">
+              <CustomNumberInput label="Age" value={age} setValue={setAge} />
+              <Select
+                label="Gender"
+                onChange={(e) => setGender(e.target.value)}
+                selectedKeys={[gender]}
+              >
                 {gendersList.map((g) => (
                   <SelectItem key={g.key}>{g.label}</SelectItem>
                 ))}
               </Select>
             </div>
-            <Input type="email" label="Passport Number" />
-            <Input type="email" label="NIC" />
-            {loadingCountries ? (
-              <div className=" aspect-square h-14 animate-pulse bg-zinc-100 rounded-xl opacity-20"></div>
-            ) : (
-              <Select label="Country">
-                {countries.map((g) => (
-                  <SelectItem key={g.key}>{g.label}</SelectItem>
-                ))}
-              </Select>
-            )}
+            <CustomStringInput
+              label="Passport Number"
+              value={passportNumber}
+              setValue={setPassportNumber}
+            />
+            <CustomStringInput
+              label="NIC"
+              value={nicNumber}
+              setValue={setNicNumber}
+            />
+            <div className=" flex flex-row gap-3">
+              {loadingCountries ? (
+                <div className=" aspect-square h-14 animate-pulse bg-zinc-100 rounded-xl opacity-20 w-full"></div>
+              ) : (
+                <Select
+                  label="Country"
+                  selectedKeys={[country]}
+                  onChange={(e) => setCountry(e.target.value)}
+                >
+                  {countries.map((g) => (
+                    <SelectItem key={g.key}>{g.label}</SelectItem>
+                  ))}
+                </Select>
+              )}
+              <CustomNumberInput
+                label="Baggage"
+                value={baggage}
+                setValue={setBaggage}
+              />
+            </div>
             <Button
               className=" bg-sky-900 text-sky-100 p-6"
               variant="solid"
@@ -265,6 +283,11 @@ const FillDetails = () => {
             >
               Pick a Seat
             </Button>
+            {detailsWarning && (
+              <div className=" w-[calc(100%-3.3em)] absolute mt-1 text-center text-red-800 italic text-sm bottom-0">
+                Please fill all the fields
+              </div>
+            )}
           </div>
         ) : loadingSeats ? (
           <div className=" w-full p-6 grid grid-cols-6 gap-6">
