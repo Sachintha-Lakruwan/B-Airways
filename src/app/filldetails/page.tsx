@@ -53,21 +53,21 @@ interface Details {
 
 const details: Details = {
   token: null,
-  name: "Kavindu",
-  age: 18,
-  gender: "male",
-  passportNumber: "A12345623",
-  nic: "200034456532",
-  country_code: "LKA",
-  flight: 3,
-  seat_number: "44A",
-  baggage: 40,
+  name: "",
+  age: 0,
+  gender: "",
+  passportNumber: "",
+  nic: "",
+  country_code: "",
+  flight: 0,
+  seat_number: "",
+  baggage: 0,
 };
 
 const FillDetails = () => {
   const [fullName, setFullName] = useState<string>("");
   const [age, setAge] = useState<number>(0);
-  const [gender, setGender] = useState<string>("female");
+  const [gender, setGender] = useState<string>("");
   const [passportNumber, setPassportNumber] = useState<string>("");
   const [nicNumber, setNicNumber] = useState<string>("");
   const [country, setCountry] = useState<string>("");
@@ -92,7 +92,6 @@ const FillDetails = () => {
     router.push("/");
   }
 
-  // funtion to fetch seat details using flight and class
   const [loadingSeats, setLoadingSeats] = useState(true);
   const [seats, setSeats] = useState<SeatRow[]>([]);
 
@@ -137,10 +136,7 @@ const FillDetails = () => {
 
   const handleSubmit = async () => {
     details.seat_number = pickedSeat;
-    details.flight = flightId;
-    if (isAuthenticated && userToken) {
-      details.token = userToken;
-    }
+
     const response = await fetch("/api/booking/reserve", {
       method: "POST",
       headers: {
@@ -172,7 +168,32 @@ const FillDetails = () => {
   const [pickSeatWarning, setPickSeatWarning] = useState<boolean>(false);
 
   function handlePickSeatButton() {
-    // check if the all the fields are filled
+    details.flight = flightId;
+
+    details.name = fullName;
+    details.age = age;
+    details.baggage = baggage;
+    details.country_code = country;
+    details.gender = gender;
+    details.nic = nicNumber;
+    details.passportNumber = passportNumber;
+
+    if (isAuthenticated && userToken) {
+      details.token = userToken;
+    }
+
+    if (
+      details.name == "" ||
+      details.age == 0 ||
+      details.gender == "" ||
+      details.passportNumber == "" ||
+      details.nic == "" ||
+      details.country_code == "" ||
+      details.baggage == 0
+    ) {
+      setDetailsWarning(true);
+      return;
+    }
     setIsPickingSeat(true);
     fetchSeats();
   }
@@ -218,6 +239,7 @@ const FillDetails = () => {
               <Select
                 label="Gender"
                 onChange={(e) => setGender(e.target.value)}
+                selectedKeys={[gender]}
               >
                 {gendersList.map((g) => (
                   <SelectItem key={g.key}>{g.label}</SelectItem>
@@ -238,7 +260,11 @@ const FillDetails = () => {
               {loadingCountries ? (
                 <div className=" aspect-square h-14 animate-pulse bg-zinc-100 rounded-xl opacity-20 w-full"></div>
               ) : (
-                <Select label="Country">
+                <Select
+                  label="Country"
+                  selectedKeys={[country]}
+                  onChange={(e) => setCountry(e.target.value)}
+                >
                   {countries.map((g) => (
                     <SelectItem key={g.key}>{g.label}</SelectItem>
                   ))}
@@ -258,8 +284,8 @@ const FillDetails = () => {
               Pick a Seat
             </Button>
             {detailsWarning && (
-              <div className=" absolute mt-1 text-center text-red-800 italic text-sm bottom-0">
-                Please pick a Seat
+              <div className=" w-[calc(100%-3.3em)] absolute mt-1 text-center text-red-800 italic text-sm bottom-0">
+                Please fill all the fields
               </div>
             )}
           </div>
