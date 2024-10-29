@@ -52,12 +52,12 @@ export async function POST(request: NextRequest) {
   try {
     // CALL `reservation_createPendingBooking`('himathbro', '22', 'male', '2222222222', '1111111111', 'ABW', '4', '30A', 24 kgggggg)
     await executeQuery(
-      "CALL `reservation_createPendingBooking`(? , ? , ? , ? , ? , ? , ?, ?, ?);",
+      "CALL `reservation_createPendingBooking`(? , ? , ? , ? , ? , ? , ? , ? , ? );",
       [
         reqBody.name,
         reqBody.age,
         reqBody.gender,
-        reqBody.passportNumber,
+        reqBody.passportNumber, 
         reqBody.nic,
         reqBody.country_code,
         reqBody.flight,
