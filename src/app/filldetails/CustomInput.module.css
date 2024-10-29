@@ -1,0 +1,20 @@
+/* CustomInput.module.css */
+
+.inputField {
+  position: relative;
+}
+
+.label {
+  position: absolute;
+  top: 1rem;
+  left: 0;
+  width: 100%;
+  transition: 0.2s all;
+  cursor: text;
+}
+
+.input:focus ~ .label,
+.input:valid ~ .label {
+  font-size: 0.775rem; /* 14px */
+  top: 0.4rem; /* Moves the label above the input */
+}

@@ -2,13 +2,15 @@
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import img from "@/public/pexels-hson-5071155.jpg";
-import { Button, Input, Select, SelectItem } from "@nextui-org/react";
+import { Button, Select, SelectItem } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import SeatSelection from "./SeatSelection";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../GlobalRedux/store";
 import { setPaymentDetails } from "../GlobalRedux/Slices/FlightDetails/flight";
+import { Input } from "@nextui-org/input";
+import CustomNumberInput from "./CustomNumberInput";
 
 const gendersList = [
   {
@@ -226,7 +228,12 @@ const FillDetails = () => {
                   ))}
                 </Select>
               )}
-              <Input type="number" label="Baggage" />
+              <CustomNumberInput
+                type="number"
+                label="Baggage"
+                value={baggage}
+                setValue={setBaggage}
+              />
             </div>
             <Button
               className=" bg-sky-900 text-sky-100 p-6"
