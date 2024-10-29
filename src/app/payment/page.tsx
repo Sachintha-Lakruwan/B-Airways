@@ -63,7 +63,9 @@ export default function Page() {
         router.push("/");
       }, 1000);
     } else {
-      setReference("H5HJD83TJG2");
+      setReference("loading...");
+      const data = await response.json();
+      setReference(data.reference);
       setSuccessful(true);
     }
   };
