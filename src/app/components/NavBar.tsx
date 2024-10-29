@@ -31,7 +31,6 @@ export default function NavBar() {
   }, [dispatch]);
 
   const authState = useSelector((state: RootState) => state.auth);
-  console.log(authState);
 
   return (
     <div className=" w-full h-[10%] bg-zinc-700 absolute z-30 nav-glass px-20">

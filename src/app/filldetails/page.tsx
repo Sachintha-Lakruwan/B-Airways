@@ -36,54 +36,6 @@ interface Seat {
 
 type SeatRow = Seat[];
 
-// const seats: SeatRow[] = [
-//   [
-//     { "44A": true },
-//     { "44B": false },
-//     { "44C": true },
-//     { "44D": false },
-//     { "44F": true },
-//     { "44G": false },
-//     { "44H": true },
-//   ],
-//   [
-//     { "45A": true },
-//     { "45B": false },
-//     { "45C": true },
-//     { "45D": false },
-//     { "45F": true },
-//     { "45G": false },
-//     { "45H": true },
-//   ],
-//   [
-//     { "46A": false },
-//     { "46B": true },
-//     { "46C": false },
-//     { "46D": true },
-//     { "46F": false },
-//     { "46G": true },
-//     { "46H": false },
-//   ],
-//   [
-//     { "47A": true },
-//     { "47B": false },
-//     { "47C": true },
-//     { "47D": false },
-//     { "47F": true },
-//     { "47G": false },
-//     { "47H": true },
-//   ],
-//   [
-//     { "48A": false },
-//     { "48B": true },
-//     { "48C": false },
-//     { "48D": true },
-//     { "48F": false },
-//     { "48G": true },
-//     { "48H": false },
-//   ],
-// ];
-
 interface Details {
   token: string | null;
   name: string;
@@ -111,6 +63,15 @@ const details: Details = {
 };
 
 const FillDetails = () => {
+  const [name, setName] = useState<string>("");
+  const [age, setAge] = useState<number>(0);
+  const [gender, setGender] = useState<string>("");
+  const [passportNumber, setPassportNumber] = useState<string>("");
+  const [nicNumber, setNicNumber] = useState<string>("");
+  const [country, setCountry] = useState<string>("");
+  const [baggage, setBaggage] = useState<number>(0);
+  const [detailsWarning, setDetailsWarning] = useState<boolean>(false);
+
   const userToken = useSelector((state: RootState) => state.auth.token);
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
@@ -244,7 +205,7 @@ const FillDetails = () => {
                 Fill your details
               </h2>
             </div>
-            <Input type="text" label="Name" placeholder=" " />
+            <Input type="email" label="Passport Number" />
             <div className=" flex flex-row gap-3">
               <Input type="" label="Age" />
               <Select label="Gender">
@@ -255,15 +216,18 @@ const FillDetails = () => {
             </div>
             <Input type="email" label="Passport Number" />
             <Input type="email" label="NIC" />
-            {loadingCountries ? (
-              <div className=" aspect-square h-14 animate-pulse bg-zinc-100 rounded-xl opacity-20"></div>
-            ) : (
-              <Select label="Country">
-                {countries.map((g) => (
-                  <SelectItem key={g.key}>{g.label}</SelectItem>
-                ))}
-              </Select>
-            )}
+            <div className=" flex flex-row gap-3">
+              {loadingCountries ? (
+                <div className=" aspect-square h-14 animate-pulse bg-zinc-100 rounded-xl opacity-20 w-full"></div>
+              ) : (
+                <Select label="Country">
+                  {countries.map((g) => (
+                    <SelectItem key={g.key}>{g.label}</SelectItem>
+                  ))}
+                </Select>
+              )}
+              <Input type="number" label="Baggage" />
+            </div>
             <Button
               className=" bg-sky-900 text-sky-100 p-6"
               variant="solid"
@@ -271,6 +235,11 @@ const FillDetails = () => {
             >
               Pick a Seat
             </Button>
+            {detailsWarning && (
+              <div className=" absolute mt-1 text-center text-red-800 italic text-sm bottom-0">
+                Please pick a Seat
+              </div>
+            )}
           </div>
         ) : loadingSeats ? (
           <div className=" w-full p-6 grid grid-cols-6 gap-6">
