@@ -47,6 +47,7 @@ export default function Loyalty() {
     }
     setLoading(true);
     setBookingInfo(null);
+    setError(false);
     const response = await fetch("/api/booking/search?ref=" + reference);
 
     if (response.status !== 200) {
