@@ -46,6 +46,7 @@ export default function Loyalty() {
       return;
     }
     setLoading(true);
+    setBookingInfo(null);
     const response = await fetch("/api/booking/search?ref=" + reference);
 
     if (response.status !== 200) {
@@ -76,7 +77,10 @@ export default function Loyalty() {
           <h1 className=" text-center mb-6 text-xl font-bold text-sky-900 tracking-wide">
             Find your booking details
           </h1>
-          <div className=" w-full grid grid-cols-[4fr_1fr] gap-4">
+          <form
+            action={handleSearch}
+            className=" w-full grid grid-cols-[4fr_1fr] gap-4"
+          >
             <input
               className=" p-2 rounded-xl font-bold pl-4"
               value={reference}
@@ -89,7 +93,7 @@ export default function Loyalty() {
             >
               Search
             </Button>
-          </div>
+          </form>
           <div className=" w-full h-[calc(100%-7rem)] bg-white rounded-2xl mt-6  flex items-center justify-center">
             {loading ? (
               <Loading />
