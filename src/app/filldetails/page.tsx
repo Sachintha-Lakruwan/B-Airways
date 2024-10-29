@@ -9,8 +9,8 @@ import SeatSelection from "./SeatSelection";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../GlobalRedux/store";
 import { setPaymentDetails } from "../GlobalRedux/Slices/FlightDetails/flight";
-import { Input } from "@nextui-org/input";
 import CustomNumberInput from "./CustomNumberInput";
+import CustomStringInput from "./CustomStringInput";
 
 const gendersList = [
   {
@@ -65,9 +65,9 @@ const details: Details = {
 };
 
 const FillDetails = () => {
-  const [name, setName] = useState<string>("");
+  const [fullName, setFullName] = useState<string>("");
   const [age, setAge] = useState<number>(0);
-  const [gender, setGender] = useState<string>("");
+  const [gender, setGender] = useState<string>("female");
   const [passportNumber, setPassportNumber] = useState<string>("");
   const [nicNumber, setNicNumber] = useState<string>("");
   const [country, setCountry] = useState<string>("");
@@ -207,17 +207,33 @@ const FillDetails = () => {
                 Fill your details
               </h2>
             </div>
-            <Input type="email" label="Passport Number" />
+            <CustomStringInput
+              label="Full Name"
+              value={fullName}
+              setValue={setFullName}
+            />
+
             <div className=" flex flex-row gap-3">
-              <Input type="" label="Age" />
-              <Select label="Gender">
+              <CustomNumberInput label="Age" value={age} setValue={setAge} />
+              <Select
+                label="Gender"
+                onChange={(e) => setGender(e.target.value)}
+              >
                 {gendersList.map((g) => (
                   <SelectItem key={g.key}>{g.label}</SelectItem>
                 ))}
               </Select>
             </div>
-            <Input type="email" label="Passport Number" />
-            <Input type="email" label="NIC" />
+            <CustomStringInput
+              label="Passport Number"
+              value={passportNumber}
+              setValue={setPassportNumber}
+            />
+            <CustomStringInput
+              label="NIC"
+              value={nicNumber}
+              setValue={setNicNumber}
+            />
             <div className=" flex flex-row gap-3">
               {loadingCountries ? (
                 <div className=" aspect-square h-14 animate-pulse bg-zinc-100 rounded-xl opacity-20 w-full"></div>
@@ -229,7 +245,6 @@ const FillDetails = () => {
                 </Select>
               )}
               <CustomNumberInput
-                type="number"
                 label="Baggage"
                 value={baggage}
                 setValue={setBaggage}
