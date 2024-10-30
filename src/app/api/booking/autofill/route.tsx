@@ -8,7 +8,7 @@ interface AutofillDetails {
     gender : ["male","female","other"],
     NIC : string,
     passport_number : string,
-    country : string
+    country_code : string
 }
 
 export async function GET(request : NextRequest) {
