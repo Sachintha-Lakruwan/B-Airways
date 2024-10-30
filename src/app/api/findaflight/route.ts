@@ -21,6 +21,7 @@ export async function GET(request: NextRequest) {
   const arrival_airport = searchParams.get("arrival_airport");
   const departure_date = searchParams.get("departure_date");
   const seat_class = searchParams.get("seat_class");
+  const date_range = searchParams.get("date_range");
 
   if (
     typeof departure_airport !== "string" ||
@@ -33,8 +34,8 @@ export async function GET(request: NextRequest) {
 
   try {
     const res = await executeQuery(
-      "CALL `reservation_flightSearch`(?, ?, ?, ?)",
-      [departure_airport, arrival_airport, departure_date, seat_class]
+      "CALL `reservation_flightSearch`(?, ?, ?, ?, ?)",
+      [departure_airport, arrival_airport, departure_date, seat_class, date_range]
     );
     const flights: Flight[] = res[0] as Flight[];
 
