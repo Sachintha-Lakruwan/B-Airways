@@ -46,18 +46,18 @@ export default function NavBar() {
             </Link>
           </div>
           <div className=" flex items-center">
-            <Link href="/">
-              <p>BOOK</p>
+            <Link href="/daily">
+              <p>DAILY</p>
+            </Link>
+          </div>
+          <div className=" flex items-center">
+            <Link href="/booking_info">
+              <p>INFO</p>
             </Link>
           </div>
           <div className=" flex items-center">
             <Link href="/loyalty">
               <p>LOYALTY</p>
-            </Link>
-          </div>
-          <div className=" flex items-center">
-            <Link href="/daily">
-              <p>DAILY</p>
             </Link>
           </div>
           {isAuthenticated && (
