@@ -16,9 +16,9 @@ import { useRouter } from "next/navigation";
 export default function NavBar() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated
-  );
+  // const isAuthenticated = useSelector(
+  //   (state: RootState) => state.auth.isAuthenticated
+  // );
 
   const handleClick = () => {
     dispatch(logout());
