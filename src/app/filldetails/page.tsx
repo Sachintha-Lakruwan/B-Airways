@@ -73,6 +73,7 @@ const FillDetails = () => {
   const [country, setCountry] = useState<string>("");
   const [baggage, setBaggage] = useState<number>(0);
   const [detailsWarning, setDetailsWarning] = useState<boolean>(false);
+  // const [detailsWarning, setDetailsWarning] = useState<boolean>(false);
 
   const userToken = useSelector((state: RootState) => state.auth.token);
   const isAuthenticated = useSelector(
@@ -256,7 +257,7 @@ const FillDetails = () => {
               value={nicNumber}
               setValue={setNicNumber}
             />
-            <div className=" flex flex-row gap-3">
+            <div className=" grid grid-cols-[1fr_1fr] gap-3">
               {loadingCountries ? (
                 <div className=" aspect-square h-14 animate-pulse bg-zinc-100 rounded-xl opacity-20 w-full"></div>
               ) : (
@@ -275,7 +276,13 @@ const FillDetails = () => {
                 value={baggage}
                 setValue={setBaggage}
               />
+              {isAuthenticated && (
+                <div className=" text-sm italic justify-center items-center flex gap-2 text-zinc-800 col-span-2">
+                  <span>Use the details from your previous booking</span>
+                </div>
+              )}
             </div>
+
             <Button
               className=" bg-sky-900 text-sky-100 p-6"
               variant="solid"
