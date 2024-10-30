@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 export default function NavBar() {
   const dispatch = useDispatch();
   const router = useRouter();
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
 
   const handleClick = () => {
     dispatch(logout());
@@ -45,8 +46,13 @@ export default function NavBar() {
             </Link>
           </div>
           <div className=" flex items-center">
-            <Link href="/">
-              <p>BOOK</p>
+            <Link href="/daily">
+              <p>DAILY</p>
+            </Link>
+          </div>
+          <div className=" flex items-center">
+            <Link href="/booking_info">
+              <p>INFO</p>
             </Link>
           </div>
           <div className=" flex items-center">
@@ -54,11 +60,13 @@ export default function NavBar() {
               <p>LOYALTY</p>
             </Link>
           </div>
-          <div className=" flex items-center">
-            <Link href="/daily">
-              <p>DAILY</p>
+          {isAuthenticated && (
+            <div className=" flex items-center">
+            <Link href="/profile">
+              <p>PROFILE</p>
             </Link>
           </div>
+          )}
         </div>
         {!authState.isAuthenticated ? (
           <Link href="/login">
