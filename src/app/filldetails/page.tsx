@@ -225,7 +225,7 @@ const FillDetails = () => {
         setFullName(detailsTemp.name);
         setGender(detailsTemp.gender);
         setPassportNumber(detailsTemp.passport_number);
-        console.log(detailsTemp);
+        setCountry(detailsTemp.country_code);
       }
     } catch (error) {
       console.log(error);
@@ -266,7 +266,6 @@ const FillDetails = () => {
               <Select
                 label="Gender"
                 onChange={(e) => {
-                  console.log(e.target.value);
                   setGender(e.target.value);
                 }}
                 selectedKeys={[gender]}
@@ -314,10 +313,10 @@ const FillDetails = () => {
                 isLoading={pastDetailsLoading}
               >
                 <div className=" text-sm italic justify-center items-center flex gap-2 text-zinc-800 col-span-2">
-                  {!pastDetailsLoading && !pastDetailsError ? (
+                  {!pastDetailsError ? (
                     <Label>Use Previous Data</Label>
                   ) : (
-                    <div>Error Occured</div>
+                    <Label className=" text-red-600">Error Occured</Label>
                   )}
                 </div>
               </Button>
