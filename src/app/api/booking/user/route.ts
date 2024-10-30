@@ -6,12 +6,8 @@ import { encodeFlightInfo } from "../search/util";
 export interface BookingDetails {
     schedule_id : number,
     departure_date : string, 
-    status : string,
-    departure : string,
-    arrival : string,
     departure_time : string,
     seat_number : string,
-    seat_class : string,
     ref : string
 }
 
@@ -28,17 +24,10 @@ export async function GET(request : NextRequest) {
                 SELECT
                     schedule.id AS schedule_id,
                     schedule.date AS 'departure_date',
-                    CASE 
-                       WHEN delay > 0 THEN 'Delayed'
-                       ELSE 'On Time'
-                    END AS status,
-                    route.departure,
-                    route.arrival,
                     SEC_TO_TIME(
                        TIME_TO_SEC(route.departure_time) + TIME_TO_SEC(schedule.delay)
                     ) AS departure_time,
-                    seat.seat_number,
-                    (SELECT name FROM seat_class WHERE seat_class.id = seat.seat_class_id) AS seat_class
+                    seat.seat_number
                 FROM registered_user 
                 INNER JOIN booking ON registered_user.id = booking.registered_user_id 
                 LEFT JOIN schedule ON schedule.id = booking.schedule_id

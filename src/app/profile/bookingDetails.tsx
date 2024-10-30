@@ -1,40 +1,39 @@
+import { MdDateRange } from "react-icons/md"
 import { BookingDetails } from "../api/booking/user/route"
+import { FaRegClock } from "react-icons/fa"
+import { FaClipboard, FaClipboardCheck } from "react-icons/fa"
+import { useState } from "react"
 
-export default function BookingDetailsCard({ bookingDetails }: { bookingDetails: BookingDetails }) {
+export default function BookingDetailsCard({ bookingDetails } : { bookingDetails : BookingDetails }) {
+    const [isCopied, setIsCopied] = useState(false)
+    const copyToClipboard = () => {
+        setIsCopied(true);
+        navigator.clipboard.writeText(bookingDetails.ref)
+        setTimeout(() => {
+            setIsCopied(false)
+        }, 2000)
+    }
     return (
-      <div className="glass p-6 rounded-lg shadow-md m-3">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-semibold">
-            {bookingDetails.departure} to {bookingDetails.arrival}
-          </h2>
-          <span className="text-sm font-medium bg-sky-100 text-sky-800 py-1 px-2 rounded-full">
-            {bookingDetails.ref}
-          </span>
+      <div className="w-[100%] flex justify-evenly text-sm pt-2">
+        <div className=" flex items-center gap-2 bg-white drop-shadow-xl p-1 rounded-full px-3 w-[25%]">
+          <MdDateRange />
+          {bookingDetails.departure_date}
         </div>
-        <div className="grid grid-cols-2 gap-4 mb-4">
-          <div className="text-sm">
-            <span className="font-medium text-gray-600">Date: </span>
-            <span>{bookingDetails.departure_date}</span>
-          </div>
-          <div className="text-sm">
-            <span className="font-medium text-gray-600">Time: </span>
-            <span>{bookingDetails.departure_time}</span>
-          </div>
-          <div className="text-sm">
-            <span className="font-medium text-gray-600">Class: </span>
-            <span className="capitalize">{bookingDetails.seat_class}</span>
-          </div>
-          <div className="text-sm">
-            <span className="font-medium text-gray-600">Seat: </span>
-            <span>{bookingDetails.seat_number}</span>
-          </div>
+        <div className=" flex items-center gap-2 bg-white drop-shadow-xl p-1 rounded-full px-3 w-[25%]">
+          <FaRegClock />
+          {bookingDetails.departure_time}
         </div>
-        <div className="flex justify-between items-center">
-          <span className={`text-sm font-medium px-2 py-1 rounded ${
-            bookingDetails.status === 'On Time' ? 'bg-green-200 text-green-800' : 'bg-red-200 text-red-800'
-          }`}>
-            {bookingDetails.status}
-          </span>
+        <div className=" flex items-center gap-2 bg-white drop-shadow-xl p-1 rounded-full px-3 w-[40%]">
+          {bookingDetails.ref}
+          {!isCopied ? (
+            <button className="ml-auto" onClick={copyToClipboard}>
+              <FaClipboard></FaClipboard>
+            </button>
+          ) : (
+            <div className="ml-auto">
+            <FaClipboardCheck />
+          </div>
+          )}
         </div>
       </div>
     )

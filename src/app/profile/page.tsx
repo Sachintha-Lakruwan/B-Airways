@@ -10,6 +10,7 @@ import { checkTokenValidity } from "../GlobalRedux/Slices/auth/authSlice";
 import { RootState } from "../GlobalRedux/store";
 import BookingDetailsCard from "./bookingDetails";
 import BookingDetailsSkeletonCard from "./bookginDetailsSkeleton";
+import profilePic from "@/public/user.png";
 
 export default function Profile() {
     const dispatch = useDispatch();
@@ -89,103 +90,192 @@ export default function Profile() {
                     alt="hero image"
                 />
             </div>
-            <div className="relative w-full h-screen flex justify-center items-center">
-                {checkingAuth ? (
+            <div className="w-full h-screen flex justify-center items-center">
+            {checkingAuth ? (
                     <div className="w-1/3 h-2/5 glass3 flex justify-center items-center rounded-md">
                         <div className="w-[100px] h-[100px] bg-none animate-spin rounded-full border-t-2 border-sky-900"></div>
                     </div>
                 ) : (
                     isAuthenticated ? (
-                        <div className="w-5/6 h-2/3 glass2 rounded-lg flex">
-                            <div className="w-[30%] h-[95%] glass3 m-3 rounded-lg text-sky-900 p-8">
-                                <h1 className="text-4xl font-bold mb-6">User Details</h1>
-                                <div className="flex flex-col"> 
-                                    <div className="mb-3">
-                                        <p className="font-extralight">Username</p>
-                                        <p className={`${fetchingUserDetails ? "italic font-extralight" :"text-2xl"}`}>{fetchingUserDetails ? "loading": userDetails.username}</p>
+                    <div className="glass3 h-[70%] w-[40%] rounded-2xl flex justify-center items-center">
+                        <div className="m-6 bg-zinc-100 rounded-2xl w-full h-[90%] flex flex-col items-center">
+                            <div className="bg-white drop-shadow-xl w-[80%] h-[40%] mt-3 flex p-3 rounded-2xl">
+                                <div className="w-[30%] h-[100%]   flex flex-col justify-center items-center">
+                                    <Image 
+                                    src={profilePic}
+                                    alt="profile picture"
+                                    className="w-[80%] object-cover"
+                                    >
+                                    </Image>
+                                </div>
+                                <div className="w-[70%] h-[100%]  p-2 flex flex-col justify-evenly flex-wrap">
+                                    <div className="mb-3 h-[30%]">
+                                        <p className="font-extralight text-xs">Username</p>
+                                        <p className={`${fetchingUserDetails ? `font-extralight italic` : `font-semibold`}`}>
+                                            {fetchingUserDetails ? "loading" : userDetails.username}
+                                        </p>
                                     </div>
-                                    <div className="mb-3">
-                                        <p className="font-extralight">Email</p>
-                                        <p className={`${fetchingUserDetails ? "italic font-extralight" :"text-2xl"}`}>{fetchingUserDetails ? "loading": userDetails.email}</p>
+                                    <div className="mb-3 h-[30%]">
+                                        <p className="font-extralight text-xs">Email</p>
+                                        <p className={`${fetchingUserDetails ? `font-extralight italic` : `font-semibold`}`}>
+                                            {fetchingUserDetails ? "loading" : userDetails.email}
+                                        </p>
                                     </div>
-                                    <div className="mb-3">
-                                        <p className="font-extralight">Total Bookings</p>
-                                        <p className={`${fetchingUserDetails ? "italic font-extralight" :"text-2xl"}`}>{fetchingUserDetails ? "loading": userDetails.total_bookings}</p>
+                                    <div className="mb-3 h-[30%]">
+                                        <p className="font-extralight text-xs">Total Booking</p>
+                                        <p className={`${fetchingUserDetails ? `font-extralight italic` : `font-semibold`}`}>
+                                            {fetchingUserDetails ? "loading" : userDetails.total_bookings}
+                                        </p>
                                     </div>
-                                    <div className="mb-3">
-                                        <p className="font-extralight">Member Type</p>
-                                        <p className={`text-2xl ${fetchingUserDetails ? "" :"hidden"}`}>loading</p>
-                                        <div className={`${fetchingUserDetails ? "hidden" :""}`}>
-                                            {userDetails.loyalty === "gold" ? (
-                                            <div className="w-fit h-fit bg-gradient-to-r from-yellow-200 to-yellow-300 p-1 rounded-md text-yellow-700">
-                                                Gold Member
-                                            </div>
-                                            ) : (
-                                                userDetails.loyalty === "frequent" ? (
-                                                <div className="w-fit h-fit bg-gradient-to-r from-gray-200 to-gray-300 p-1 rounded-md text-gray-700">
-                                                    Frequent Member
+                                    <div className="mb-3 h-[30%]">
+                                        <p className="font-extralight text-xs">Member Type</p>
+                                        <p className={`${fetchingUserDetails ? `font-extralight italic` : `font-semibold`}`}>
+                                            {fetchingUserDetails ? "loading" : (
+                                                userDetails.loyalty === "gold" ? (
+                                                <div className="w-fit h-fit bg-gradient-to-r from-yellow-200 to-yellow-300 p-1 rounded-md text-yellow-700">
+                                                    Gold Member
                                                 </div>
                                                 ) : (
-                                                    <div className="w-fit h-fit bg-gradient-to-r from-blue-100 to-blue-200 p-1 rounded-md text-blue-700">
-                                                        Guest
+                                                    userDetails.loyalty === "frequent" ? (
+                                                    <div className="w-fit h-fit bg-gradient-to-r from-gray-200 to-gray-300 p-1 rounded-[10px] text-gray-700 text-sm">
+                                                        Frequent
                                                     </div>
+                                                    ) : (
+                                                        <div className="w-fit h-fit bg-gradient-to-r from-blue-100 to-blue-200 p-1 rounded-md text-blue-700">
+                                                            New
+                                                        </div>
+                                                    )
                                                 )
                                             )}
-                                        </div>
+                                        </p>
                                     </div>
                                 </div>
                             </div>
-                            <div className="w-[70%] h-[95%] glass3 m-3 rounded-lg text-sky-900 p-8">
-                                <h1 className="text-4xl font-bold mb-6">Last Three Bookings</h1>
-                                {/* <div key={1} className="bg-white/30 p-4 rounded-lg shadow-md">
-                                    <div className="flex items-center justify-between mb-2">
-                                    <h2 className="text-2xl font-semibold">paris</h2>
-                                    <span className="text-sm font-medium bg-sky-100 text-sky-800 py-1 px-2 rounded-full">
-                                        MDAwMy1PVVk9
-                                    </span>
-                                    </div>
-                                    <div className="flex items-center space-x-4 text-sm">
-                                    <div className="flex items-center">
-                                        
-                                        <span>2024-10-14</span>
-                                    </div>
-                                    <div className="flex items-center">
-                                        <span>8hours</span>
-                                    </div>
-                                    </div>
-                                </div> */}
-                                <div className="overflow-y-auto h-[80%] rounded-lg" > 
-                                {fetchingUserDetails ? (
-                                    <BookingDetailsSkeletonCard/>
-                                ) : (
-                                    bookingDetails.length > 0 ? (
-                                        bookingDetails.map((booking) => (
-                                            <BookingDetailsCard bookingDetails={booking} key={booking.schedule_id + booking.seat_number}/>
-                                        ))
-                                    ) : (
+                            <div className="bg-zinc-200 drop w-[80%] h-[40%] mt-10 drop-shadow-xl rounded-2xl flex flex-col items-center">
+                                <h1 className="p-3 text-xl font-bold">Recent Bookings</h1>
+                                <div className="w-full h-full overflow-y-auto items-">
+                                    {!fetchingUserDetails ? (
+                                        bookingDetails.map((booking) => {
+                                            return <BookingDetailsCard bookingDetails={booking} key={booking.schedule_id + booking.seat_number}/>
+                                        })
+                                    ) :(
                                         <div>
-                                            No bookings available
+                                            <BookingDetailsSkeletonCard/>
+                                            <BookingDetailsSkeletonCard/>
+                                            <BookingDetailsSkeletonCard/>
                                         </div>
-                                    )
-                                )}
+                                    )}
+                                    
                                 </div>
                             </div>
-                            {/* <h1>User details</h1>
-                            <div className="flex w-[90%]">
-                                <h1 className="text-6xl font-bold text-sky-900 p-10">himath</h1>
-                                <div className="ml-auto mt-auto mb-auto w-fit h-fit bg-gradient-to-r from-yellow-200 to-yellow-300 p-1 rounded-md text-yellow-700">Gold Member</div>
-                            </div>
-                            <p>Member type</p>
-                            <p>himath@gmail.com</p>
-                            <p>last three bookings</p> */}
                         </div>
+                    </div>
                     ) : (
                     <div className="w-1/3 h-2/5 glass3 flex justify-center items-center rounded-md">
                         <div className="w-[100px] h-[100px] bg-none animate-spin rounded-full border-t-2 border-sky-900"></div>
                     </div>
-                    )
-                )}
+                    ))}
+                
             </div>
         </>
     );
 }
+
+
+// <div className="relative w-full h-screen flex justify-center items-center">
+//                 {checkingAuth ? (
+//                     <div className="w-1/3 h-2/5 glass3 flex justify-center items-center rounded-md">
+//                         <div className="w-[100px] h-[100px] bg-none animate-spin rounded-full border-t-2 border-sky-900"></div>
+//                     </div>
+//                 ) : (
+//                     isAuthenticated ? (
+//                         <div className="w-5/6 h-2/3 glass2 rounded-lg flex">
+//                             <div className="w-[30%] h-[95%] glass3 m-3 rounded-lg text-sky-900 p-8">
+//                                 <h1 className="text-4xl font-bold mb-6">User Details</h1>
+//                                 <div className="flex flex-col"> 
+//                                     <div className="mb-3">
+//                                         <p className="font-extralight">Username</p>
+//                                         <p className={`${fetchingUserDetails ? "italic font-extralight" :"text-2xl"}`}>{fetchingUserDetails ? "loading": userDetails.username}</p>
+//                                     </div>
+//                                     <div className="mb-3">
+//                                         <p className="font-extralight">Email</p>
+//                                         <p className={`${fetchingUserDetails ? "italic font-extralight" :"text-2xl"}`}>{fetchingUserDetails ? "loading": userDetails.email}</p>
+//                                     </div>
+//                                     <div className="mb-3">
+//                                         <p className="font-extralight">Total Bookings</p>
+//                                         <p className={`${fetchingUserDetails ? "italic font-extralight" :"text-2xl"}`}>{fetchingUserDetails ? "loading": userDetails.total_bookings}</p>
+//                                     </div>
+//                                     <div className="mb-3">
+//                                         <p className="font-extralight">Member Type</p>
+//                                         <p className={`text-2xl ${fetchingUserDetails ? "" :"hidden"}`}>loading</p>
+//                                         <div className={`${fetchingUserDetails ? "hidden" :""}`}>
+//                                             {userDetails.loyalty === "gold" ? (
+//                                             <div className="w-fit h-fit bg-gradient-to-r from-yellow-200 to-yellow-300 p-1 rounded-md text-yellow-700">
+//                                                 Gold Member
+//                                             </div>
+//                                             ) : (
+//                                                 userDetails.loyalty === "frequent" ? (
+//                                                 <div className="w-fit h-fit bg-gradient-to-r from-gray-200 to-gray-300 p-1 rounded-md text-gray-700">
+//                                                     Frequent Member
+//                                                 </div>
+//                                                 ) : (
+//                                                     <div className="w-fit h-fit bg-gradient-to-r from-blue-100 to-blue-200 p-1 rounded-md text-blue-700">
+//                                                         Guest
+//                                                     </div>
+//                                                 )
+//                                             )}
+//                                         </div>
+//                                     </div>
+//                                 </div>
+//                             </div>
+//                             <div className="w-[70%] h-[95%] glass3 m-3 rounded-lg text-sky-900 p-8">
+//                                 <h1 className="text-4xl font-bold mb-6">Last Three Bookings</h1>
+//                                 {/* <div key={1} className="bg-white/30 p-4 rounded-lg shadow-md">
+//                                     <div className="flex items-center justify-between mb-2">
+//                                     <h2 className="text-2xl font-semibold">paris</h2>
+//                                     <span className="text-sm font-medium bg-sky-100 text-sky-800 py-1 px-2 rounded-full">
+//                                         MDAwMy1PVVk9
+//                                     </span>
+//                                     </div>
+//                                     <div className="flex items-center space-x-4 text-sm">
+//                                     <div className="flex items-center">
+                                        
+//                                         <span>2024-10-14</span>
+//                                     </div>
+//                                     <div className="flex items-center">
+//                                         <span>8hours</span>
+//                                     </div>
+//                                     </div>
+//                                 </div> */}
+//                                 <div className="overflow-y-auto h-[80%] rounded-lg" > 
+//                                 {fetchingUserDetails ? (
+//                                     <BookingDetailsSkeletonCard/>
+//                                 ) : (
+//                                     bookingDetails.length > 0 ? (
+//                                         bookingDetails.map((booking) => (
+//                                             <BookingDetailsCard bookingDetails={booking} key={booking.schedule_id + booking.seat_number}/>
+//                                         ))
+//                                     ) : (
+//                                         <div>
+//                                             No bookings available
+//                                         </div>
+//                                     )
+//                                 )}
+//                                 </div>
+//                             </div>
+//                             {/* <h1>User details</h1>
+//                             <div className="flex w-[90%]">
+//                                 <h1 className="text-6xl font-bold text-sky-900 p-10">himath</h1>
+//                                 <div className="ml-auto mt-auto mb-auto w-fit h-fit bg-gradient-to-r from-yellow-200 to-yellow-300 p-1 rounded-md text-yellow-700">Gold Member</div>
+//                             </div>
+//                             <p>Member type</p>
+//                             <p>himath@gmail.com</p>
+//                             <p>last three bookings</p> */}
+//                         </div>
+//                     ) : (
+//                     <div className="w-1/3 h-2/5 glass3 flex justify-center items-center rounded-md">
+//                         <div className="w-[100px] h-[100px] bg-none animate-spin rounded-full border-t-2 border-sky-900"></div>
+//                     </div>
+//                     )
+//                 )}
+//             </div>
