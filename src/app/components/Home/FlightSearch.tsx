@@ -11,7 +11,7 @@ import {
   setDepartureAirport,
   setPassengerClass,
   setDepartureDate,
-  setBaggageRange,
+  setDateRange,
   checkFirstStage,
 } from "@/app/GlobalRedux/Slices/FlightDetails/flight";
 import { RootState } from "@/app/GlobalRedux/store";
@@ -19,11 +19,12 @@ import { useRouter } from "next/navigation";
 import { getLocalTimeZone, today } from "@internationalized/date";
 
 const baggageList = [
-  { key: 1, label: "0-10kg" },
-  { key: 2, label: "10-20kg" },
-  { key: 3, label: "20-30kg" },
-  { key: 4, label: "30-40kg" },
-  { key: 5, label: "40-50kg" },
+  { key: 7, label: "7 Days" },
+  { key: 14, label: "Two Weeks" },
+  { key: 31, label: "Month" },
+  { key: 62, label: "Two Months" },
+  { key: 183, label: "Six Months" },
+  { key: 365, label: "Year" },
 ];
 
 interface Airport {
@@ -47,9 +48,7 @@ export default function FlightSearch() {
   const arrivalAirport = useSelector(
     (state: RootState) => state.flight.arrivalAirport
   );
-  const baggageRange = useSelector(
-    (state: RootState) => state.flight.baggageRange
-  );
+  const dateRange = useSelector((state: RootState) => state.flight.dateRange);
   const passengerClass = useSelector(
     (state: RootState) => state.flight.passengerClass
   );
@@ -88,7 +87,7 @@ export default function FlightSearch() {
   function handleSubmit() {
     if (isStageOneCompleted) {
       router.push(
-        `/findaflight?dep=${departureAirport}&arr=${arrivalAirport}&baggage=${baggageRange}&date=${departureDate}&class=${passengerClass}`
+        `/findaflight?dep=${departureAirport}&arr=${arrivalAirport}&date_range=${dateRange}&date=${departureDate}&class=${passengerClass}`
       );
     } else {
       setButtonWarning(true);
@@ -135,7 +134,7 @@ export default function FlightSearch() {
                 items={airports}
                 label={
                   <p className="🛫 font-bold text-lg text-zinc-900">
-                    Arrival Airport
+                    Arrival airport
                   </p>
                 }
                 placeholder="Select an option"
@@ -194,15 +193,16 @@ export default function FlightSearch() {
               items={baggageList}
               label={
                 <p className="font-bold text-lg text-zinc-900">
-                  Search flight for next..
+                  Search flights within..
                 </p>
               }
               placeholder="Select an option"
               size="lg"
               variant="underlined"
               className=" w-full h-full"
+              defaultSelectedKeys={[7]}
               onChange={(e) => {
-                dispatch(setBaggageRange(e.target.value));
+                dispatch(setDateRange(e.target.value));
                 dispatch(checkFirstStage());
               }}
             >

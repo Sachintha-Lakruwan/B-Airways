@@ -26,6 +26,7 @@ export default function SelectFlight() {
   const arrival_airport = searchParams.get("arr");
   const passenger_class = searchParams.get("class");
   const date = searchParams.get("date");
+  const date_range = parseInt(searchParams.get("date_range") || "7");
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [flights, setFlights] = useState<Flight[]>([]);
@@ -35,7 +36,7 @@ export default function SelectFlight() {
       setIsLoading(true);
 
       const flightsResponse = await fetch(
-        `/api/findaflight?departure_airport=${departure_airport}&arrival_airport=${arrival_airport}&departure_date=${date}&seat_class=${passenger_class}`
+        `/api/findaflight?departure_airport=${departure_airport}&arrival_airport=${arrival_airport}&departure_date=${date}&seat_class=${passenger_class}&date_range=${date_range}`
       );
       if (flightsResponse) {
         const countriesTemp = await flightsResponse.json();

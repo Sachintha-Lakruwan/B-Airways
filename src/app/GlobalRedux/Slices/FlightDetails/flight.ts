@@ -14,7 +14,7 @@ export interface FlightState {
   departureAirport: string;
   arrivalAirport: string;
   departureDate: string;
-  baggageRange: number;
+  dateRange: number;
   passengerClass: string;
   isStageOneCompleted: boolean;
   paymentDetails: PayementDetails | null;
@@ -24,7 +24,7 @@ const initialState: FlightState = {
   departureAirport: "",
   arrivalAirport: "",
   departureDate: "",
-  baggageRange: 0,
+  dateRange: 0,
   passengerClass: "",
   isStageOneCompleted: false,
   paymentDetails: null,
@@ -40,7 +40,7 @@ export const flightSlice = createSlice({
         state.departureAirport == "" ||
         state.departureDate == "" ||
         state.passengerClass == "" ||
-        state.baggageRange == 0
+        state.dateRange == 0
       ) {
         state.isStageOneCompleted = false;
       } else {
@@ -56,8 +56,8 @@ export const flightSlice = createSlice({
     setDepartureDate: (state, action) => {
       state.departureDate = action.payload;
     },
-    setBaggageRange: (state, action) => {
-      state.baggageRange = action.payload;
+    setDateRange: (state, action) => {
+      state.dateRange = action.payload;
     },
     setPassengerClass: (state, action) => {
       state.passengerClass = action.payload;
@@ -73,7 +73,7 @@ export const {
   setArrivalAirport,
   setDepartureDate,
   setPassengerClass,
-  setBaggageRange,
+  setDateRange,
   checkFirstStage,
   setPaymentDetails,
 } = flightSlice.actions;
