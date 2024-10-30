@@ -48,34 +48,49 @@ export default function NavBar() {
             </Link>
           </div>
           <div className=" flex items-center">
-            <Link href="/daily">
+            <Link
+              href="/daily"
+              className=" transition-all delay-75 duration-300 ease-in-out hover:text-zinc-400 hover:drop-shadow-2xl hover:scale-105"
+            >
               <p>DAILY</p>
             </Link>
           </div>
           <div className=" flex items-center">
-            <Link href="/booking_info">
+            <Link
+              href="/booking_info"
+              className=" transition-all delay-75 duration-300 ease-in-out hover:text-zinc-400 hover:drop-shadow-2xl hover:scale-105"
+            >
               <p>INFO</p>
             </Link>
           </div>
           <div className=" flex items-center">
-            <Link href="/loyalty">
+            <Link
+              className=" transition-all delay-75 duration-300 ease-in-out hover:text-zinc-400 hover:drop-shadow-2xl hover:scale-105"
+              href="/loyalty"
+            >
               <p>LOYALTY</p>
             </Link>
           </div>
         </div>
         {!authState.isAuthenticated ? (
-          <Link href="/login">
+          <Link
+            className=" transition-all delay-75 duration-300 ease-in-out hover:text-zinc-400 hover:drop-shadow-2xl hover:scale-105"
+            href="/login"
+          >
             <div>
               <div>LOGIN</div>
             </div>
           </Link>
         ) : (
           <div className=" flex gap-6">
-            <Link href="/profile">
+            <Link
+              className=" transition-all delay-75 duration-300 ease-in-out hover:text-zinc-400 hover:drop-shadow-2xl hover:scale-105"
+              href="/profile"
+            >
               <p>PROFILE</p>
             </Link>
             <button onClick={handleClick}>
-              <div>
+              <div className=" transition-all delay-75 duration-300 ease-in-out hover:text-zinc-400 hover:drop-shadow-2xl hover:scale-105">
                 <div>LOGOUT</div>
               </div>
             </button>
