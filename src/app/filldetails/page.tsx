@@ -78,6 +78,10 @@ const FillDetails = () => {
   // const [pastDetails, setPastDetails] = useState<Details | null>(null);
   const [pastDetailsError, setPastDetailsError] = useState<boolean>(false);
   const [pastDetailsLoading, setPastDetailsLoading] = useState<boolean>(false);
+  const [loadingPickSeatButton, setLoadingPickSeatButton] =
+    useState<boolean>(false);
+  const [loadingCheckoutButton, setLoadingCheckoutButton] =
+    useState<boolean>(false);
 
   const userToken = useSelector((state: RootState) => state.auth.token);
   const isAuthenticated = useSelector(
@@ -155,6 +159,7 @@ const FillDetails = () => {
       console.log("error");
       setTimeout(() => {
         router.push("/");
+        setLoadingCheckoutButton(false);
       }, 1000);
     } else {
       if (response) {
@@ -164,6 +169,7 @@ const FillDetails = () => {
       setSuccessfull(true);
       setTimeout(() => {
         router.push(`/payment?flight=${flightId}&seat=${pickedSeat}`);
+        setLoadingCheckoutButton(false);
       }, 1000);
     }
   };
@@ -173,6 +179,7 @@ const FillDetails = () => {
   const [pickSeatWarning, setPickSeatWarning] = useState<boolean>(false);
 
   function handlePickSeatButton() {
+    setLoadingPickSeatButton(true);
     details.flight = flightId;
 
     details.name = fullName;
@@ -196,19 +203,23 @@ const FillDetails = () => {
       details.country_code == ""
     ) {
       setDetailsWarning(true);
+      setLoadingPickSeatButton(false);
       return;
     }
     setIsPickingSeat(true);
     fetchSeats();
+    setLoadingPickSeatButton(false);
   }
 
   function handleConfirmPayment() {
     // send passenger details, booking id, seat number, flight id to the backend
+    setLoadingCheckoutButton(true);
     if (pickedSeat != "") {
       setPickSeatWarning(false);
       handleSubmit();
     } else {
       setPickSeatWarning(true);
+      setLoadingCheckoutButton(false);
     }
   }
 
@@ -311,7 +322,7 @@ const FillDetails = () => {
                 onClick={fetchPastDetails}
                 isLoading={pastDetailsLoading}
               >
-                <div className=" text-sm italic justify-center items-center flex gap-2 text-zinc-800 col-span-2">
+                <div className=" text-sm justify-center items-center flex gap-2 text-zinc-800 col-span-2 font-bold">
                   {!pastDetailsError ? (
                     <Label>Use Previous Data</Label>
                   ) : (
@@ -322,9 +333,10 @@ const FillDetails = () => {
             )}
 
             <Button
-              className=" bg-sky-900 text-sky-100 p-6"
+              className=" bg-sky-900 text-sky-100 p-6 font-bold"
               variant="solid"
               onClick={handlePickSeatButton}
+              isLoading={loadingPickSeatButton}
             >
               Pick a Seat
             </Button>
@@ -374,6 +386,7 @@ const FillDetails = () => {
                 className=" bg-sky-900 text-sky-100 p-6 w-full"
                 variant="solid"
                 onClick={handleConfirmPayment}
+                isLoading={loadingCheckoutButton}
               >
                 Go to Checkout
               </Button>

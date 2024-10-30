@@ -26,6 +26,9 @@ const details: Details = {
 };
 
 export default function Page() {
+  const [loadingPayNowButton, setLoadingPayNowButton] =
+    useState<boolean>(false);
+  const [loadingHomeButton, setLoadingHomeButton] = useState<boolean>(false);
   const dispatch = useDispatch();
   const paymentDetails = useSelector(
     (state: RootState) => state.flight.paymentDetails
@@ -57,6 +60,7 @@ export default function Page() {
     if (seatNumber) {
       details.seat_number = seatNumber;
     } else {
+      setLoadingPayNowButton(false);
       return;
     }
     const response = await fetch("/api/booking/confirm", {
@@ -71,16 +75,19 @@ export default function Page() {
       console.log("error");
       setTimeout(() => {
         router.push("/");
+        setLoadingPayNowButton(false);
       }, 1000);
     } else {
       setReference("loading...");
       const data = await response.json();
       setReference(data.reference);
       setSuccessful(true);
+      setLoadingPayNowButton(false);
     }
   };
 
   function handleConfirmPayment() {
+    setLoadingPayNowButton(true);
     handleSubmit();
   }
   return (
@@ -129,6 +136,7 @@ export default function Page() {
           <Button
             className=" bg-sky-900 text-sky-100 p-6 w-full text-md font-bold"
             variant="solid"
+            isLoading={loadingPayNowButton}
             onClick={handleConfirmPayment}
           >
             Pay Now
@@ -190,11 +198,14 @@ export default function Page() {
           </div>
           <Button
             className="h-14 w-48 bg-sky-100 drop-shadow-2xl opacity-75 rounded-full"
+            isLoading={loadingHomeButton}
             variant="solid"
             color="primary"
             onClick={() => {
+              setLoadingHomeButton(true);
               dispatch(setPaymentDetails(null));
               router.push("/");
+              setLoadingHomeButton(false);
             }}
           >
             <p className="font-bold text-lg text-sky-900">Home</p>

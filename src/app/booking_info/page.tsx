@@ -91,6 +91,7 @@ export default function Loyalty() {
             <Button
               className=" bg-sky-900 text-sky-50 font-bold"
               onClick={handleSearch}
+              isLoading={loading}
             >
               Search
             </Button>

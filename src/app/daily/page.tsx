@@ -6,7 +6,6 @@ import img from "@/public/pexels-hson-5071155.jpg";
 import FlightRaw from "./FlightRaw";
 import { Button } from "@nextui-org/button";
 import { useRouter } from "next/navigation";
-// import { motion } from "framer-motion";
 import { Select, SelectItem } from "@nextui-org/select";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../GlobalRedux/store";
@@ -14,7 +13,6 @@ import {
   checkFirstStage,
   setPassengerClass,
 } from "../GlobalRedux/Slices/FlightDetails/flight";
-import { motion } from "framer-motion";
 
 interface Schedule {
   key: number;
@@ -179,11 +177,7 @@ const FlightListing: React.FC = () => {
       )}
       {chooseClass && (
         <div className=" absolute top-0 h-screen w-full z-10  flex items-center justify-center glass">
-          <motion.div
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ opacity: 100, scale: 1 }}
-            className=" glass3 px-10 py-8 rounded-xl drop-shadow-xl"
-          >
+          <div className=" glass3 px-10 py-8 rounded-xl drop-shadow-xl">
             {/* <p className=" py-2 font-bold">
               Please select your preferred class to continue booking.
             </p> */}
@@ -230,7 +224,7 @@ const FlightListing: React.FC = () => {
                 </div>
               )}
             </div>
-          </motion.div>
+          </div>
         </div>
       )}
     </div>
