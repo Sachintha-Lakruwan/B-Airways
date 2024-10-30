@@ -25,7 +25,7 @@ export default function SeatSelection({
   };
 
   return (
-    <div className="w-full max-h-[50dvh] overflow-scroll">
+    <div className="w-full max-h-[50dvh] overflow-scroll overflow-x-hidden mb-3">
       {seats.map((row, rowIndex) => (
         <div key={rowIndex} className="flex space-x-2 mb-4 justify-center">
           {row.map((seat) => {
