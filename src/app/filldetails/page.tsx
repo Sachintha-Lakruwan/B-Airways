@@ -11,6 +11,7 @@ import { RootState } from "../GlobalRedux/store";
 import { setPaymentDetails } from "../GlobalRedux/Slices/FlightDetails/flight";
 import CustomNumberInput from "./CustomNumberInput";
 import CustomStringInput from "./CustomStringInput";
+import { Label } from "@/components/ui/label";
 
 const gendersList = [
   {
@@ -73,6 +74,10 @@ const FillDetails = () => {
   const [country, setCountry] = useState<string>("");
   const [baggage, setBaggage] = useState<number>(0);
   const [detailsWarning, setDetailsWarning] = useState<boolean>(false);
+  // const [switchValue, setSwitchValue] = useState<boolean>(false);
+  // const [pastDetails, setPastDetails] = useState<Details | null>(null);
+  const [pastDetailsError, setPastDetailsError] = useState<boolean>(false);
+  const [pastDetailsLoading, setPastDetailsLoading] = useState<boolean>(false);
 
   const userToken = useSelector((state: RootState) => state.auth.token);
   const isAuthenticated = useSelector(
@@ -208,6 +213,28 @@ const FillDetails = () => {
     }
   }
 
+  async function fetchPastDetails() {
+    setPastDetailsError(false);
+    setPastDetailsLoading(true);
+    try {
+      const response = await fetch("/api/booking/autofill?token=" + userToken);
+      if (response) {
+        const detailsTemp = await response.json();
+        setNicNumber(detailsTemp.NIC);
+        setAge(detailsTemp.age);
+        setFullName(detailsTemp.name);
+        setGender(detailsTemp.gender);
+        setPassportNumber(detailsTemp.passport_number);
+        console.log(detailsTemp);
+      }
+    } catch (error) {
+      console.log(error);
+      setPastDetailsError(true);
+    } finally {
+      setPastDetailsLoading(false);
+    }
+  }
+
   return (
     <div className=" w-full h-screen flex justify-center items-center flex-col">
       <div className="bg-sky-400 w-full h-full absolute">
@@ -238,7 +265,10 @@ const FillDetails = () => {
               <CustomNumberInput label="Age" value={age} setValue={setAge} />
               <Select
                 label="Gender"
-                onChange={(e) => setGender(e.target.value)}
+                onChange={(e) => {
+                  console.log(e.target.value);
+                  setGender(e.target.value);
+                }}
                 selectedKeys={[gender]}
               >
                 {gendersList.map((g) => (
@@ -256,7 +286,7 @@ const FillDetails = () => {
               value={nicNumber}
               setValue={setNicNumber}
             />
-            <div className=" flex flex-row gap-3">
+            <div className=" grid grid-cols-[1fr_1fr] gap-3">
               {loadingCountries ? (
                 <div className=" aspect-square h-14 animate-pulse bg-zinc-100 rounded-xl opacity-20 w-full"></div>
               ) : (
@@ -276,6 +306,23 @@ const FillDetails = () => {
                 setValue={setBaggage}
               />
             </div>
+            {isAuthenticated && (
+              <Button
+                className=" bg-zinc-200 text-zinc-900 p-6"
+                variant="solid"
+                onClick={fetchPastDetails}
+                isLoading={pastDetailsLoading}
+              >
+                <div className=" text-sm italic justify-center items-center flex gap-2 text-zinc-800 col-span-2">
+                  {!pastDetailsLoading && !pastDetailsError ? (
+                    <Label>Use Previous Data</Label>
+                  ) : (
+                    <div>Error Occured</div>
+                  )}
+                </div>
+              </Button>
+            )}
+
             <Button
               className=" bg-sky-900 text-sky-100 p-6"
               variant="solid"

@@ -14,7 +14,7 @@ const CustomNumberInput = ({ label, value, setValue }: CustomInputProps) => {
         <input
           type="number"
           id="name"
-          className={`w-full h-full rounded-xl border-0 outline-0 text-gray-900 ${styles.input} p-3 pt-6 pb-2`}
+          className={`w-full h-full rounded-xl border-0 outline-0 text-gray-900 ${styles.input} p-3 pt-6 pb-2 bg-zinc-50`}
           value={value}
           onChange={(e) => {
             setValue(parseInt(e.target.value));
