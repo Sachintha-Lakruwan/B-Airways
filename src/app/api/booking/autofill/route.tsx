@@ -7,7 +7,8 @@ interface AutofillDetails {
     age : number,
     gender : ["male","female","other"],
     NIC : string,
-    passport_number : string
+    passport_number : string,
+    country : string
 }
 
 export async function GET(request : NextRequest) {
@@ -19,7 +20,7 @@ export async function GET(request : NextRequest) {
     try {
         if (token !== null) {
             decode = jwt.verify(token, process.env.JWT_SECRET || "your_jwt_secret") as { userId : number, role : string ,iat : number, exp : number };
-            const res = await executeQuery("SELECT passenger.name, passenger.age, passenger.gender, passenger.NIC, passenger.passport_number FROM `registered_user` LEFT JOIN `passenger` ON registered_user.passenger_id = passenger.id WHERE registered_user.id = ?", [decode.userId]) as AutofillDetails[];
+            const res = await executeQuery("SELECT passenger.name, passenger.age, passenger.gender, passenger.NIC, passenger.passport_number, country.name AS `country` FROM `registered_user` LEFT JOIN `passenger` ON registered_user.passenger_id = passenger.id LEFT JOIN country ON country.code = passenger.country_code WHERE registered_user.id = ?", [decode.userId]) as AutofillDetails[];
             // console.log(res);
             return NextResponse.json(res[0]);
         }
