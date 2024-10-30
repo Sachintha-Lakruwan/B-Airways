@@ -193,8 +193,7 @@ const FillDetails = () => {
       details.gender == "" ||
       details.passportNumber == "" ||
       details.nic == "" ||
-      details.country_code == "" ||
-      details.baggage == 0
+      details.country_code == ""
     ) {
       setDetailsWarning(true);
       return;
